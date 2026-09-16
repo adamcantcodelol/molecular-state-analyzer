@@ -1,9 +1,11 @@
 /**
- * Web Worker entry: runs Baum–Welch + Viterbi (and 2-vs-3 compare) off the main thread.
+ * Web Worker entry: runs Baum–Welch + Viterbi, 2-vs-3 compare, and bootstrap off the main thread.
  */
+import { runHmmBootstrap } from './bootstrap'
 import { compareTwoVsThree } from './modelCriteria'
 import { fitGaussianHmm } from './gaussianHmm'
 import type {
+  HmmBootstrapRequest,
   HmmCompareRequest,
   HmmWorkerRequest,
   HmmWorkerResponse,
@@ -12,7 +14,7 @@ import type {
 declare const self: DedicatedWorkerGlobalScope
 
 self.onmessage = (
-  event: MessageEvent<HmmWorkerRequest | HmmCompareRequest>,
+  event: MessageEvent<HmmWorkerRequest | HmmCompareRequest | HmmBootstrapRequest>,
 ) => {
   const msg = event.data
   if (!msg) return
@@ -84,6 +86,40 @@ self.onmessage = (
           preferBic: comparison.preferBic,
           freeParamFormula: comparison.freeParamFormula,
         },
+      }
+      self.postMessage(ok)
+    } catch (err) {
+      const fail: HmmWorkerResponse = {
+        type: 'error',
+        requestId,
+        message: err instanceof Error ? err.message : String(err),
+      }
+      self.postMessage(fail)
+    }
+  }
+
+  if (msg.type === 'bootstrap') {
+    const { requestId, observations, settings } = msg
+    try {
+      const summary = runHmmBootstrap(
+        observations,
+        settings,
+        (done, total, detail) => {
+          const progress: HmmWorkerResponse = {
+            type: 'bootstrap-progress',
+            requestId,
+            done,
+            total,
+            iteration: detail?.iteration,
+            logLikelihood: detail?.logLikelihood,
+          }
+          self.postMessage(progress)
+        },
+      )
+      const ok: HmmWorkerResponse = {
+        type: 'bootstrap-result',
+        requestId,
+        summary,
       }
       self.postMessage(ok)
     } catch (err) {

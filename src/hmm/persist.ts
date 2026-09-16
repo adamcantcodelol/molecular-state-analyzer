@@ -1,5 +1,5 @@
 import type { Project } from '../types/project'
-import type { PersistedHmmComparison, PersistedHmmRun } from './types'
+import type { PersistedHmmBootstrap, PersistedHmmComparison, PersistedHmmRun } from './types'
 
 const KEY = 'hmmRuns'
 const CMP_KEY = 'hmmComparisons'
@@ -50,6 +50,32 @@ export function withHmmComparison(
     state: {
       ...(project.state ?? {}),
       [CMP_KEY]: hmmComparisons,
+    },
+  }
+}
+
+const BOOT_KEY = 'hmmBootstraps'
+const MAX_BOOT = 20
+
+export function getHmmBootstraps(project: Project): PersistedHmmBootstrap[] {
+  const state = project.state ?? {}
+  const raw = state[BOOT_KEY]
+  if (!Array.isArray(raw)) return []
+  return raw as PersistedHmmBootstrap[]
+}
+
+export function withHmmBootstrap(
+  project: Project,
+  run: PersistedHmmBootstrap,
+): Project {
+  const prev = getHmmBootstraps(project)
+  const hmmBootstraps = [run, ...prev].slice(0, MAX_BOOT)
+  return {
+    ...project,
+    datasets: project.datasets,
+    state: {
+      ...(project.state ?? {}),
+      [BOOT_KEY]: hmmBootstraps,
     },
   }
 }

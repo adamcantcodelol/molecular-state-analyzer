@@ -311,6 +311,16 @@ export function ModelComparePanel({
             Free params: {display.freeParamFormula}. n=
             {display.shared.observationCount}, seed={display.shared.seed}.
           </p>
+
+          {display.models.some((m) => !m.converged) && (
+            <p className="error" role="status">
+              Non-convergence: at least one model hit maxIter before the relative
+              LL tolerance. AIC/BIC &quot;prefer&quot; markers below are still
+              computed from the last iterate, but they are <strong>not</strong>{' '}
+              reliable model-selection evidence until both fits converge (raise
+              maxIter or loosen tol). Do not over-read the arrows.
+            </p>
+          )}
           <table className="data-table">
             <thead>
               <tr>
@@ -320,7 +330,7 @@ export function ModelComparePanel({
                 <th>total LL</th>
                 <th>AIC</th>
                 <th>BIC</th>
-                <th>iters</th>
+                <th>iters / conv</th>
                 <th>means (stat. indices)</th>
               </tr>
             </thead>
@@ -341,7 +351,7 @@ export function ModelComparePanel({
                   </td>
                   <td>
                     {m.iterations}
-                    {m.converged ? '' : '*'}
+                    {m.converged ? ' · ok' : ' · maxIter*'}
                   </td>
                   <td>{m.means.map((x) => fmt(x, 4)).join(', ')}</td>
                 </tr>
@@ -349,9 +359,20 @@ export function ModelComparePanel({
             </tbody>
           </table>
           <p className="muted small">
-            Prefer by AIC: <strong>K={display.preferAic}</strong>. Prefer by
-            BIC: <strong>K={display.preferBic}</strong>. Arrows mark the lower
-            score. These are information-criteria picks, not conformation names.
+            Prefer by AIC: <strong>K={display.preferAic}</strong>
+            {display.models.find((m) => m.nStates === display.preferAic)?.converged
+              ? ''
+              : ' (fit did not converge)'}
+            . Prefer by BIC: <strong>K={display.preferBic}</strong>
+            {display.models.find((m) => m.nStates === display.preferBic)?.converged
+              ? ''
+              : ' (fit did not converge)'}
+            . Arrows mark the lower score. These are information-criteria picks,
+            not conformation names
+            {display.models.some((m) => !m.converged)
+              ? ' — treat prefer as provisional when * (maxIter) is present'
+              : ''}
+            .
           </p>
         </div>
       )}

@@ -1,4 +1,4 @@
-import type { HmmCompareRequest, HmmCompareResultMsg, HmmFitResult, HmmSettings, HmmWorkerRequest, HmmWorkerResponse } from './types'
+import type { BootstrapSettings, BootstrapSummary, HmmBootstrapRequest, HmmCompareRequest, HmmCompareResultMsg, HmmFitResult, HmmSettings, HmmWorkerRequest, HmmWorkerResponse } from './types'
 
 export type RunHmmOptions = {
   observations: number[]
@@ -159,6 +159,92 @@ export function runHmmCompareInWorker(
 
     const req: HmmCompareRequest = {
       type: 'compare',
+      requestId,
+      observations,
+      settings,
+    }
+    worker.postMessage(req)
+  })
+}
+
+
+export type RunHmmBootstrapOptions = {
+  observations: number[]
+  settings: BootstrapSettings
+  onProgress?: (done: number, total: number, detail?: { iteration?: number; logLikelihood?: number }) => void
+  signal?: AbortSignal
+}
+
+export function runHmmBootstrapInWorker(
+  options: RunHmmBootstrapOptions,
+): Promise<BootstrapSummary> {
+  const { observations, settings, onProgress, signal } = options
+
+  return new Promise((resolve, reject) => {
+    if (typeof Worker === 'undefined') {
+      reject(new Error('Web Workers are not available in this environment.'))
+      return
+    }
+
+    const requestId =
+      typeof crypto !== 'undefined' && 'randomUUID' in crypto
+        ? crypto.randomUUID()
+        : `hmm_boot_${Date.now()}_${Math.random().toString(36).slice(2)}`
+
+    const worker = new Worker(new URL('./hmmWorker.ts', import.meta.url), {
+      type: 'module',
+    })
+
+    const cleanup = () => {
+      worker.removeEventListener('message', onMessage)
+      worker.removeEventListener('error', onError)
+      signal?.removeEventListener('abort', onAbort)
+      worker.terminate()
+    }
+
+    const onAbort = () => {
+      cleanup()
+      reject(new DOMException('HMM bootstrap aborted', 'AbortError'))
+    }
+
+    const onError = (ev: ErrorEvent) => {
+      cleanup()
+      reject(new Error(ev.message || 'HMM bootstrap worker failed'))
+    }
+
+    const onMessage = (ev: MessageEvent<HmmWorkerResponse>) => {
+      const data = ev.data
+      if (!data || data.requestId !== requestId) return
+      if (data.type === 'bootstrap-progress') {
+        onProgress?.(data.done, data.total, {
+          iteration: data.iteration,
+          logLikelihood: data.logLikelihood,
+        })
+        return
+      }
+      if (data.type === 'error') {
+        cleanup()
+        reject(new Error(data.message))
+        return
+      }
+      if (data.type === 'bootstrap-result') {
+        cleanup()
+        resolve(data.summary)
+      }
+    }
+
+    worker.addEventListener('message', onMessage)
+    worker.addEventListener('error', onError)
+    if (signal) {
+      if (signal.aborted) {
+        onAbort()
+        return
+      }
+      signal.addEventListener('abort', onAbort)
+    }
+
+    const req: HmmBootstrapRequest = {
+      type: 'bootstrap',
       requestId,
       observations,
       settings,

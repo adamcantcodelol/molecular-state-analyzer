@@ -35,21 +35,35 @@ Preview the production build:
 npm run preview
 ```
 
-## What Phase 4 includes
+## What Phase 6 includes
 
-- **Gaussian HMM engine** — real 1D Gaussian-emission HMM in TypeScript:
-  Baum–Welch (EM) training + Viterbi decoding (Rabiner scaled forward–backward).
-- **Web Worker** — heavy compute runs off the main thread; the UI posts settings /
-  observations and displays results.
-- **Reproducibility** — Mulberry32-seeded initialization; same seed + settings +
-  observations → same model / path on a given JS engine.
-- **Dashboard wiring** — pick a committed time-series value column, configure
-  `nStates` / `maxIter` / `tol` / `seed`, run, inspect means / variances /
-  transition matrix / Viterbi path. Labels are honest (latent states, not
-  invented biophysics).
-- **Persistence** — runs saved under `project.state.hmmRuns` only; imported
-  `originalText` is never mutated.
-- **Fixture** — see `fixtures/hmm_two_state.csv` and `fixtures/README-hmm.md`.
+- **Moving-block bootstrap** — nonparametric resampling of the 1D observation
+  sequence (default block length ⌊√T⌋); refit Gaussian HMM on each replicate.
+- **Uncertainty summaries** — mean ± SD and percentile intervals for emission
+  means, Viterbi occupancy fractions, and transition probabilities.
+- **Label-switching** — states aligned by sorting means ascending before
+  aggregating across bootstraps.
+- **Web Worker** — bootstrap loop stays off the main thread.
+- **Persistence** — `project.state.hmmBootstraps` only; `originalText` untouched.
+- **Fixture / verify** — `fixtures/README-bootstrap.md`, `npm run verify:bootstrap`.
+
+```bash
+npm run verify:bootstrap
+```
+
+## Phase 5 (model comparison)
+
+- K=2 vs K=3 AIC/BIC on the same seed/settings; UI warns when a fit hits maxIter
+  so IC “prefer” is not over-read. See `fixtures/README-aic.md`.
+
+```bash
+npm run verify:aic
+```
+
+## Phase 4 (Gaussian HMM)
+
+- Baum–Welch + Viterbi in a Web Worker; Mulberry32-seeded init.
+- Persists under `project.state.hmmRuns`. See `fixtures/README-hmm.md`.
 
 ```bash
 npm run verify:hmm
@@ -77,4 +91,4 @@ npm run verify:hmm
 - Vite + React + TypeScript
 - [idb](https://github.com/jakearchibald/idb) for IndexedDB
 - [uPlot](https://github.com/leeoniya/uPlot) for raw time-series / distribution charts
-- Custom Gaussian HMM (Baum–Welch + Viterbi) in a Vite Web Worker
+- Custom Gaussian HMM (Baum–Welch + Viterbi) + moving-block bootstrap in a Vite Web Worker

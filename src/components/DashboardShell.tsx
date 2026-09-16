@@ -2,6 +2,7 @@ import type { ImportedDataset } from '../types/dataset'
 import type { Project } from '../types/project'
 import { DatasetList } from './DatasetList'
 import { HmmPanel } from './HmmPanel'
+import { BootstrapPanel } from './BootstrapPanel'
 import { ModelComparePanel } from './ModelComparePanel'
 import { ImportPanel } from './ImportPanel'
 import { RawDataExplorer } from './RawDataExplorer'
@@ -94,16 +95,24 @@ export function DashboardShell({
           persisting={saving || importing}
         />
 
+        <BootstrapPanel
+          project={project}
+          datasets={datasets}
+          onPersist={onPersistProject}
+          persisting={saving || importing}
+        />
+
         <section className="panel dash-meta" aria-labelledby="shell-heading">
           <h2 id="shell-heading" className="panel-title">
             Project details
           </h2>
           <p className="muted">
-            Phases 4–5: Gaussian HMM (Baum–Welch + Viterbi) in a Web Worker,
-            plus K=2 vs K=3 AIC/BIC comparison. Latent states are unsupervised
-            statistical indices — not biophysical names. Imported{' '}
-            <code>originalText</code> is never mutated; runs/comparisons live
-            under <code>project.state</code>.
+            Phases 4–6: Gaussian HMM (Baum–Welch + Viterbi) in a Web Worker,
+            K=2 vs K=3 AIC/BIC comparison, and moving-block bootstrap
+            uncertainty. Latent states are unsupervised statistical indices —
+            not biophysical names. Imported <code>originalText</code> is never
+            mutated; runs/comparisons/bootstraps live under{' '}
+            <code>project.state</code>.
           </p>
           <dl className="meta-grid">
             <div>

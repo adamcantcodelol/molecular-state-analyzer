@@ -112,12 +112,6 @@ export type HmmCompareResultMsg = {
   }
 }
 
-export type HmmWorkerResponse =
-  | HmmWorkerProgress
-  | HmmWorkerResult
-  | HmmWorkerError
-  | HmmCompareProgress
-  | HmmCompareResultMsg
 
 /**
  * Persisted 2-vs-3 comparison (Phase 5). Never written into dataset.originalText.
@@ -196,3 +190,98 @@ export function normalizeSettings(s: HmmSettings): Required<HmmSettings> {
       : DEFAULT_HMM_SETTINGS.minVariance
   return { nStates, maxIter, tol, seed, minVariance }
 }
+
+/** Settings for Phase 6 moving-block bootstrap. */
+export type BootstrapSettings = HmmSettings & {
+  /** Number of bootstrap replicates (≥ 1). */
+  nBoot: number
+  /**
+   * Block length for moving-block bootstrap.
+   * Omit or 0 → max(1, floor(sqrt(T))) at run time.
+   */
+  blockLength?: number
+}
+
+export type ScalarSummary = {
+  mean: number
+  sd: number
+  p2_5: number
+  p50: number
+  p97_5: number
+}
+
+export type BootstrapSummary = {
+  method: 'moving-block'
+  methodDoc: string
+  settings: Required<BootstrapSettings>
+  observationCount: number
+  blockLength: number
+  nBoot: number
+  labelAlign: 'sort-means-asc'
+  seedScheme: string
+  pointEstimate: {
+    means: number[]
+    variances: number[]
+    startProb: number[]
+    transProb: number[][]
+    occupancies: number[]
+    logLikelihood: number
+    iterations: number
+    converged: boolean
+  }
+  means: ScalarSummary[]
+  occupancies: ScalarSummary[]
+  transitions: ScalarSummary[][]
+  convergedCount: number
+  replicateConvergedFraction: number
+}
+
+export type HmmBootstrapRequest = {
+  type: 'bootstrap'
+  requestId: string
+  observations: number[]
+  settings: BootstrapSettings
+}
+
+export type HmmBootstrapProgress = {
+  type: 'bootstrap-progress'
+  requestId: string
+  done: number
+  total: number
+  iteration?: number
+  logLikelihood?: number
+}
+
+export type HmmBootstrapResultMsg = {
+  type: 'bootstrap-result'
+  requestId: string
+  summary: BootstrapSummary
+}
+
+/**
+ * Persisted bootstrap run (Phase 6). Never written into dataset.originalText.
+ */
+export type PersistedHmmBootstrap = {
+  id: string
+  createdAt: string
+  datasetId: string
+  datasetFileName: string
+  valueColumn: string
+  seriesFilter: string | null
+  summary: BootstrapSummary
+}
+
+export const DEFAULT_BOOTSTRAP_SETTINGS: Required<BootstrapSettings> = {
+  ...DEFAULT_HMM_SETTINGS,
+  nBoot: 20,
+  blockLength: 0,
+}
+
+export type HmmWorkerResponse =
+  | HmmWorkerProgress
+  | HmmWorkerResult
+  | HmmWorkerError
+  | HmmCompareProgress
+  | HmmCompareResultMsg
+  | HmmBootstrapProgress
+  | HmmBootstrapResultMsg
