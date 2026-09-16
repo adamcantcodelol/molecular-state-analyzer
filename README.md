@@ -35,6 +35,17 @@ Preview the production build:
 npm run preview
 ```
 
+## What Phase 10 includes
+
+- **smFRET panel** — committed CSV/JSON with Time+Value mapping; Value treated
+  as **E_FRET** and plotted vs time (`TimeSeriesChart`).
+- **Optional HMM on E_FRET** — same Gaussian HMM Web Worker; latent states
+  labeled as **statistical** indices on E_FRET only (never structural
+  conformations / distances).
+- **Persistence** — `project.state.smfretHmmRuns` with `source: "smfret"` and
+  `observationKind: "E_FRET"`; `originalText` never mutated.
+- **Fixture docs** — `fixtures/smfret_efret.csv`, `fixtures/README-smfret.md`.
+
 ## What Phase 9 includes
 
 - **Experimental conditions** — attach temperature, ligand, concentration,
