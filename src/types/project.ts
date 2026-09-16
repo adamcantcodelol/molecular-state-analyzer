@@ -11,7 +11,10 @@ export interface Project {
    * Originals are preserved on each dataset; nothing is silently rewritten.
    */
   datasets: ImportedDataset[]
-  /** Optional empty state blob for future analysis data. */
+  /**
+   * Optional analysis blob (e.g. hmmRuns). Never a substitute for dataset originals.
+   * HMM outputs are stored here separately from imported originalText.
+   */
   state?: Record<string, unknown>
 }
 

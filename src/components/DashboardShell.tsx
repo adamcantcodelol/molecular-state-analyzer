@@ -1,6 +1,7 @@
 import type { ImportedDataset } from '../types/dataset'
 import type { Project } from '../types/project'
 import { DatasetList } from './DatasetList'
+import { HmmPanel } from './HmmPanel'
 import { ImportPanel } from './ImportPanel'
 import { RawDataExplorer } from './RawDataExplorer'
 
@@ -10,6 +11,8 @@ type Props = {
   onSave: () => Promise<void>
   onAddDataset: (dataset: ImportedDataset) => Promise<void>
   onRemoveDataset: (id: string) => Promise<void>
+  /** Persist project (e.g. HMM runs under state) without inventing analysis claims. */
+  onPersistProject: (project: Project) => Promise<void>
   saving?: boolean
   importing?: boolean
   removingId?: string | null
@@ -22,6 +25,7 @@ export function DashboardShell({
   onSave,
   onAddDataset,
   onRemoveDataset,
+  onPersistProject,
   saving = false,
   importing = false,
   removingId = null,
@@ -75,13 +79,22 @@ export function DashboardShell({
 
         <RawDataExplorer datasets={datasets} />
 
+        <HmmPanel
+          project={project}
+          datasets={datasets}
+          onPersistRun={onPersistProject}
+          persisting={saving}
+        />
+
         <section className="panel dash-meta" aria-labelledby="shell-heading">
           <h2 id="shell-heading" className="panel-title">
             Project details
           </h2>
           <p className="muted">
-            Analysis conclusions are not invented here. Phase 3 adds data-quality
-            warnings and raw-value plots only.
+            Phase 4 adds a real Gaussian HMM (Baum–Welch + Viterbi) in a Web
+            Worker. Latent states are unsupervised — not invented biophysical
+            names. Imported <code>originalText</code> is never mutated; HMM
+            outputs live under <code>project.state.hmmRuns</code>.
           </p>
           <dl className="meta-grid">
             <div>

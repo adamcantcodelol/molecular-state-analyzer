@@ -178,6 +178,26 @@ export default function App() {
     }
   }
 
+  async function handlePersistProject(next: Project) {
+    setSaving(true)
+    setSaveMessage(null)
+    try {
+      const updated = withDatasets(await saveProject(next))
+      setOpenProject(updated)
+      setSaveMessage(
+        `Saved HMM run · ${new Date(updated.updatedAt).toLocaleTimeString()}`,
+      )
+      await refreshList()
+    } catch (err) {
+      setSaveMessage(
+        err instanceof Error ? err.message : 'Failed to persist HMM run.',
+      )
+      throw err
+    } finally {
+      setSaving(false)
+    }
+  }
+
   function handleBack() {
     sessionStorage.removeItem(OPEN_PROJECT_KEY)
     setOpenProject(null)
@@ -222,6 +242,7 @@ export default function App() {
           onSave={handleSave}
           onAddDataset={handleAddDataset}
           onRemoveDataset={handleRemoveDataset}
+          onPersistProject={handlePersistProject}
           saving={saving}
           importing={importing}
           removingId={removingId}

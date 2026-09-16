@@ -35,22 +35,32 @@ Preview the production build:
 npm run preview
 ```
 
-## What Phase 3 includes
+## What Phase 4 includes
 
-- **Data quality checker** — inspects committed datasets and surfaces explicit
-  warnings (missing values, duplicates, non-numeric mapped columns, ragged rows,
-  out-of-order time, etc.). Nothing is silently fixed, deleted, or rewritten.
-- **Raw-data visualization** — time-series and distribution plots for mapped
-  CSV/JSON with zoom, hover, and filters (series / time range / value column).
-  Built with [uPlot](https://github.com/leeoniya/uPlot) (client-side only).
-- **Dashboard wiring** — quality + plots live on the open project dashboard for
-  committed datasets; import / column-mapping flow is unchanged.
+- **Gaussian HMM engine** — real 1D Gaussian-emission HMM in TypeScript:
+  Baum–Welch (EM) training + Viterbi decoding (Rabiner scaled forward–backward).
+- **Web Worker** — heavy compute runs off the main thread; the UI posts settings /
+  observations and displays results.
+- **Reproducibility** — Mulberry32-seeded initialization; same seed + settings +
+  observations → same model / path on a given JS engine.
+- **Dashboard wiring** — pick a committed time-series value column, configure
+  `nStates` / `maxIter` / `tol` / `seed`, run, inspect means / variances /
+  transition matrix / Viterbi path. Labels are honest (latent states, not
+  invented biophysics).
+- **Persistence** — runs saved under `project.state.hmmRuns` only; imported
+  `originalText` is never mutated.
+- **Fixture** — see `fixtures/hmm_two_state.csv` and `fixtures/README-hmm.md`.
+
+```bash
+npm run verify:hmm
+```
 
 ## Earlier phases
 
-- **Phase 1** — project picker, IndexedDB storage, empty analysis shell
+- **Phase 3** — data quality checker + raw uPlot time-series / distribution views
 - **Phase 2** — FASTA / PDB / mmCIF / CSV / JSON import with explicit column
   mapping for tabular time-series; originals stored unchanged
+- **Phase 1** — project picker, IndexedDB storage, empty analysis shell
 
 ## Import formats
 
@@ -67,3 +77,4 @@ npm run preview
 - Vite + React + TypeScript
 - [idb](https://github.com/jakearchibald/idb) for IndexedDB
 - [uPlot](https://github.com/leeoniya/uPlot) for raw time-series / distribution charts
+- Custom Gaussian HMM (Baum–Welch + Viterbi) in a Vite Web Worker
