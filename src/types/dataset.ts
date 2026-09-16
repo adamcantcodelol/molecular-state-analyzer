@@ -71,6 +71,20 @@ export interface ImportedDataset {
   summary: DatasetSummary
   /** Present only after the user explicitly confirms column mapping (CSV/JSON). */
   columnMapping?: ColumnMapping[]
+  /**
+   * True when this dataset was generated in-app (Phase 7).
+   * Must be treated as SYNTHETIC — never presented as experimental/real data.
+   */
+  synthetic?: boolean
+  /** Optional generation metadata for synthetic datasets (ground-truth params). */
+  syntheticMeta?: {
+    seed: number
+    nStates: number
+    length: number
+    means: number[]
+    variances: number[]
+    stayProb: number
+  }
 }
 
 export type ParseResult<T extends DatasetSummary = DatasetSummary> = {

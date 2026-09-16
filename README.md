@@ -35,6 +35,20 @@ Preview the production build:
 npm run preview
 ```
 
+## What Phase 7 includes
+
+- **Seeded synthetic HMM generator** — Mulberry32 + Box–Muller Gaussian HMM
+  path/emissions with sticky `stayProb`; CSV/JSON include `true_state`.
+- **UI** — Synthetic generator panel (seed, length, K, means, variances,
+  stayProb); preview; download; add to project as **SYNTHETIC** (never
+  experimental).
+- **Badge** — DatasetList shows a clear SYNTHETIC pill when `ds.synthetic`.
+- **Fixture / verify** — `fixtures/README-synthetic.md`, `npm run verify:synthetic`.
+
+```bash
+npm run verify:synthetic
+```
+
 ## What Phase 6 includes
 
 - **Moving-block bootstrap** — nonparametric resampling of the 1D observation

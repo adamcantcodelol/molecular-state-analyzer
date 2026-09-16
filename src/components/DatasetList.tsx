@@ -25,7 +25,15 @@ export function DatasetList({ datasets, onRemove, removingId = null }: Props) {
         <li key={ds.id} className="dataset-card">
           <div className="dataset-card-head">
             <div>
-              <div className="dataset-name">{ds.fileName}</div>
+              <div className="dataset-name">
+                {ds.fileName}
+                {ds.synthetic ? (
+                  <span className="pill pill-synthetic" title="Generated in-app — not experimental">
+                    {' '}
+                    SYNTHETIC
+                  </span>
+                ) : null}
+              </div>
               <div className="muted small">
                 <span className="pill">{ds.format.toUpperCase()}</span>
                 {' · '}

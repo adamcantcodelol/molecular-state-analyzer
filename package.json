@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "verify:hmm": "npx --yes esbuild scripts/verify-hmm.mts --bundle --platform=node --format=esm --outfile=/tmp/msa-verify-hmm.mjs && node /tmp/msa-verify-hmm.mjs",
     "verify:aic": "npx --yes esbuild scripts/verify-aic.mts --bundle --platform=node --format=esm --outfile=/tmp/msa-verify-aic.mjs && node /tmp/msa-verify-aic.mjs",
-    "verify:bootstrap": "npx --yes esbuild scripts/verify-bootstrap.mts --bundle --platform=node --format=esm --outfile=/tmp/msa-verify-bootstrap.mjs && node /tmp/msa-verify-bootstrap.mjs"
+    "verify:bootstrap": "npx --yes esbuild scripts/verify-bootstrap.mts --bundle --platform=node --format=esm --outfile=/tmp/msa-verify-bootstrap.mjs && node /tmp/msa-verify-bootstrap.mjs",
+    "verify:synthetic": "npx --yes esbuild scripts/verify-synthetic.mts --bundle --platform=node --format=esm --outfile=/tmp/msa-verify-synthetic.mjs && node /tmp/msa-verify-synthetic.mjs"
   },
   "dependencies": {
     "idb": "^8.0.3",

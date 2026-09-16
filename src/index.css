@@ -689,3 +689,22 @@ select.input {
   margin-left: -1px;
   background: #0b6e6e;
 }
+
+/* —— Phase 7: synthetic generator —— */
+
+.pill-synthetic {
+  background: color-mix(in srgb, #c45c26 18%, transparent);
+  color: #c45c26;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin-left: 0.35rem;
+  vertical-align: middle;
+}
+
+.synth-panel .synth-preview {
+  margin-top: 0.75rem;
+}
+
+.synth-panel .hmm-actions {
+  margin-top: 0.75rem;
+}

@@ -5,6 +5,7 @@ import { HmmPanel } from './HmmPanel'
 import { BootstrapPanel } from './BootstrapPanel'
 import { ModelComparePanel } from './ModelComparePanel'
 import { ImportPanel } from './ImportPanel'
+import { SyntheticGeneratorPanel } from './SyntheticGeneratorPanel'
 import { RawDataExplorer } from './RawDataExplorer'
 
 type Props = {
@@ -102,16 +103,23 @@ export function DashboardShell({
           persisting={saving || importing}
         />
 
+        <SyntheticGeneratorPanel
+          onAddDataset={onAddDataset}
+          busy={importing || saving}
+        />
+
         <section className="panel dash-meta" aria-labelledby="shell-heading">
           <h2 id="shell-heading" className="panel-title">
             Project details
           </h2>
           <p className="muted">
-            Phases 4–6: Gaussian HMM (Baum–Welch + Viterbi) in a Web Worker,
-            K=2 vs K=3 AIC/BIC comparison, and moving-block bootstrap
-            uncertainty. Latent states are unsupervised statistical indices —
-            not biophysical names. Imported <code>originalText</code> is never
-            mutated; runs/comparisons/bootstraps live under{' '}
+            Phases 4–7: Gaussian HMM (Baum–Welch + Viterbi) in a Web Worker,
+            K=2 vs K=3 AIC/BIC comparison, moving-block bootstrap uncertainty,
+            and a seeded SYNTHETIC HMM generator for verification. Latent
+            states are unsupervised statistical indices — not biophysical
+            names. Synthetic datasets are always labeled SYNTHETIC and never
+            presented as experimental. Imported <code>originalText</code> is
+            never mutated; runs/comparisons/bootstraps live under{' '}
             <code>project.state</code>.
           </p>
           <dl className="meta-grid">
