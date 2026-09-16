@@ -52,6 +52,9 @@ export function TimeSeriesChart({
     const xs = [...xSet].sort((a, b) => a - b)
     if (xs.length === 0) return
 
+    const xMin = xs[0]!
+    const xMax = xs[xs.length - 1]!
+
     const data: uPlot.AlignedData = [xs]
     const seriesOpts: uPlot.Series[] = [
       {
@@ -72,6 +75,25 @@ export function TimeSeriesChart({
         width: 2,
         points: { show: xs.length <= 80 },
       })
+    }
+
+    const resetZoom = (u: uPlot) => {
+      u.setScale('x', { min: xMin, max: xMax })
+      // Auto y from visible data
+      let yMin = Infinity
+      let yMax = -Infinity
+      for (let s = 1; s < data.length; s++) {
+        const col = data[s] as (number | null)[]
+        for (const v of col) {
+          if (v == null || Number.isNaN(v)) continue
+          if (v < yMin) yMin = v
+          if (v > yMax) yMax = v
+        }
+      }
+      if (Number.isFinite(yMin) && Number.isFinite(yMax)) {
+        const pad = yMin === yMax ? 1 : (yMax - yMin) * 0.05
+        u.setScale('y', { min: yMin - pad, max: yMax + pad })
+      }
     }
 
     const opts: uPlot.Options = {
@@ -104,12 +126,50 @@ export function TimeSeriesChart({
       cursor: {
         show: true,
         points: { size: 8 },
+        drag: {
+          x: true,
+          y: false,
+          setScale: true,
+        },
+      },
+      select: {
+        show: true,
+        left: 0,
+        top: 0,
+        width: 0,
+        height: 0,
       },
       legend: {
         show: true,
         live: true,
       },
-      hooks: {},
+      hooks: {
+        setSelect: [
+          (u) => {
+            // Explicit zoom if drag.setScale alone is insufficient
+            if (u.select.width > 0) {
+              const left = u.posToVal(u.select.left, 'x')
+              const right = u.posToVal(u.select.left + u.select.width, 'x')
+              const min = Math.min(left, right)
+              const max = Math.max(left, right)
+              if (max > min) {
+                u.setScale('x', { min, max })
+              }
+              u.setSelect({ left: 0, top: 0, width: 0, height: 0 }, false)
+            }
+          },
+        ],
+        ready: [
+          (u) => {
+            const onDblClick = (e: MouseEvent) => {
+              e.preventDefault()
+              resetZoom(u)
+            }
+            u.over.addEventListener('dblclick', onDblClick)
+            // Stash for cleanup via destroy (over is removed with plot)
+          },
+        ],
+      },
     }
 
     const plot = new uPlot(opts, data, el)
