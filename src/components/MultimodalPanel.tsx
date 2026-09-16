@@ -480,7 +480,7 @@ export function MultimodalPanel({
     setStatus(null)
     if (draft.datasetIds.length === 0 && draft.conditionIds.length === 0) {
       setError(
-        'Select at least one dataset (and optionally conditions). A multimodal bundle needs linked evidence sources.',
+        'Select at least one dataset (and optionally conditions). A multimodal bundle needs linked datasets / modalities (not a joint evidence claim).',
       )
       return
     }
