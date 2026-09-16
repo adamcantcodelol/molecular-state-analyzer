@@ -35,6 +35,20 @@ Preview the production build:
 npm run preview
 ```
 
+## What Phase 14 includes
+
+- **Lab notebook** — append-only entries with immutable version history
+  (edits append a new version; prior text is never silently rewritten).
+- **Epistemic kinds** — Observation / Inference / Note; exports keep
+  Observations, Inferences, and User hypotheses in separate sections.
+- **Project versioning** — timestamped snapshots of dataset metadata +
+  `project.state` summary counts (never copies `originalText`).
+- **Research report export** — Markdown and JSON downloads with clear
+  Observations / Inferences / User hypotheses sections (never conflated).
+- **Persistence** — `project.state.notebookEntries`,
+  `project.state.projectVersions`; `originalText` never mutated.
+- **Fixture docs** — `fixtures/README-notebook.md`.
+
 ## What Phase 13 includes
 
 - **Experimental design planner** — UI to describe a goal, pick # conditions /
