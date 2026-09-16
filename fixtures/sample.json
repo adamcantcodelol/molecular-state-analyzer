@@ -1,0 +1,5 @@
+[
+  {"time": 0, "value": 1.2, "series": "A"},
+  {"time": 1, "value": 1.1, "series": "A"},
+  {"time": 2, "value": 0.95, "series": "A"}
+]

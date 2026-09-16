@@ -1,0 +1,13 @@
+data_TEST
+_entry.id TEST
+loop_
+_atom_site.group_PDB
+_atom_site.id
+_atom_site.type_symbol
+_atom_site.label_atom_id
+_atom_site.label_asym_id
+_atom_site.Cartn_x
+_atom_site.Cartn_y
+_atom_site.Cartn_z
+ATOM 1 N N A 11.104 13.207 9.208
+ATOM 2 C CA A 12.560 13.207 9.208

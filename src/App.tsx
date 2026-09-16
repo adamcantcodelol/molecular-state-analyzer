@@ -8,6 +8,7 @@ import {
   listProjects,
   saveProject,
 } from './db/projects'
+import type { ImportedDataset } from './types/dataset'
 import type { Project } from './types/project'
 
 type View =
@@ -17,6 +18,13 @@ type View =
 
 const OPEN_PROJECT_KEY = 'msa:openProjectId'
 
+function withDatasets(project: Project): Project {
+  return {
+    ...project,
+    datasets: Array.isArray(project.datasets) ? project.datasets : [],
+  }
+}
+
 export default function App() {
   const [view, setView] = useState<View>({ kind: 'list' })
   const [projects, setProjects] = useState<Project[]>([])
@@ -24,6 +32,8 @@ export default function App() {
   const [loading, setLoading] = useState(true)
   const [busy, setBusy] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [importing, setImporting] = useState(false)
+  const [removingId, setRemovingId] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [saveMessage, setSaveMessage] = useState<string | null>(null)
 
@@ -32,7 +42,7 @@ export default function App() {
     setLoading(true)
     try {
       const items = await listProjects()
-      setProjects(items)
+      setProjects(items.map(withDatasets))
     } catch (err) {
       setError(
         err instanceof Error
@@ -52,7 +62,7 @@ export default function App() {
         try {
           const project = await getProject(savedId)
           if (project) {
-            setOpenProject(project)
+            setOpenProject(withDatasets(project))
             setView({ kind: 'dashboard', projectId: project.id })
           } else {
             sessionStorage.removeItem(OPEN_PROJECT_KEY)
@@ -68,7 +78,7 @@ export default function App() {
     setBusy(true)
     setError(null)
     try {
-      const project = await createProject({ name })
+      const project = withDatasets(await createProject({ name }))
       sessionStorage.setItem(OPEN_PROJECT_KEY, project.id)
       setOpenProject(project)
       setView({ kind: 'dashboard', projectId: project.id })
@@ -88,7 +98,7 @@ export default function App() {
         return
       }
       sessionStorage.setItem(OPEN_PROJECT_KEY, project.id)
-      setOpenProject(project)
+      setOpenProject(withDatasets(project))
       setSaveMessage(null)
       setView({ kind: 'dashboard', projectId: project.id })
     } catch (err) {
@@ -101,16 +111,70 @@ export default function App() {
     setSaving(true)
     setSaveMessage(null)
     try {
-      const updated = await saveProject(openProject)
+      const updated = withDatasets(await saveProject(openProject))
       setOpenProject(updated)
       setSaveMessage(`Saved ${new Date(updated.updatedAt).toLocaleTimeString()}`)
       await refreshList()
     } catch (err) {
-      setSaveMessage(
-        err instanceof Error ? err.message : 'Save failed.',
-      )
+      setSaveMessage(err instanceof Error ? err.message : 'Save failed.')
     } finally {
       setSaving(false)
+    }
+  }
+
+  async function handleAddDataset(dataset: ImportedDataset) {
+    if (!openProject) return
+    setImporting(true)
+    setSaveMessage(null)
+    try {
+      const next: Project = withDatasets({
+        ...openProject,
+        datasets: [...(openProject.datasets ?? []), dataset],
+      })
+      const updated = withDatasets(await saveProject(next))
+      setOpenProject(updated)
+      setSaveMessage(
+        `Imported “${dataset.fileName}” · saved ${new Date(updated.updatedAt).toLocaleTimeString()}`,
+      )
+      await refreshList()
+    } catch (err) {
+      setSaveMessage(
+        err instanceof Error ? err.message : 'Import save failed.',
+      )
+      throw err
+    } finally {
+      setImporting(false)
+    }
+  }
+
+  async function handleRemoveDataset(id: string) {
+    if (!openProject) return
+    const target = (openProject.datasets ?? []).find((d) => d.id === id)
+    if (!target) return
+    const ok = window.confirm(
+      `Remove “${target.fileName}” from this project? The original file on disk is untouched; only the copy stored in IndexedDB is deleted.`,
+    )
+    if (!ok) return
+
+    setRemovingId(id)
+    setSaveMessage(null)
+    try {
+      const next: Project = withDatasets({
+        ...openProject,
+        datasets: (openProject.datasets ?? []).filter((d) => d.id !== id),
+      })
+      const updated = withDatasets(await saveProject(next))
+      setOpenProject(updated)
+      setSaveMessage(
+        `Removed “${target.fileName}” · saved ${new Date(updated.updatedAt).toLocaleTimeString()}`,
+      )
+      await refreshList()
+    } catch (err) {
+      setSaveMessage(
+        err instanceof Error ? err.message : 'Remove failed.',
+      )
+    } finally {
+      setRemovingId(null)
     }
   }
 
@@ -156,7 +220,11 @@ export default function App() {
           project={openProject}
           onBack={handleBack}
           onSave={handleSave}
+          onAddDataset={handleAddDataset}
+          onRemoveDataset={handleRemoveDataset}
           saving={saving}
+          importing={importing}
+          removingId={removingId}
           saveMessage={saveMessage}
         />
       )}

@@ -34,17 +34,29 @@ function newId(): string {
   return `proj_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`
 }
 
+/** Normalize Phase 1 projects that lack `datasets`. */
+function normalize(project: Project): Project {
+  return {
+    ...project,
+    datasets: Array.isArray(project.datasets) ? project.datasets : [],
+  }
+}
+
 export async function listProjects(): Promise<Project[]> {
   const db = await getDb()
   const all = await db.getAll(STORE)
-  return all.sort(
-    (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
-  )
+  return all
+    .map(normalize)
+    .sort(
+      (a, b) =>
+        new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
+    )
 }
 
 export async function getProject(id: string): Promise<Project | undefined> {
   const db = await getDb()
-  return db.get(STORE, id)
+  const project = await db.get(STORE, id)
+  return project ? normalize(project) : undefined
 }
 
 export async function createProject(input: ProjectCreateInput): Promise<Project> {
@@ -59,6 +71,7 @@ export async function createProject(input: ProjectCreateInput): Promise<Project>
     name,
     createdAt: now,
     updatedAt: now,
+    datasets: [],
     state: {},
   }
 
@@ -68,10 +81,10 @@ export async function createProject(input: ProjectCreateInput): Promise<Project>
 }
 
 export async function saveProject(project: Project): Promise<Project> {
-  const updated: Project = {
+  const updated: Project = normalize({
     ...project,
     updatedAt: new Date().toISOString(),
-  }
+  })
   const db = await getDb()
   await db.put(STORE, updated)
   return updated

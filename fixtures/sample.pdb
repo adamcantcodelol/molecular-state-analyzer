@@ -1,0 +1,6 @@
+HEADER    SAMPLE
+TITLE     MINIMAL PDB FOR IMPORT TEST
+ATOM      1  N   ALA A   1      11.104  13.207   9.208  1.00 20.00           N
+ATOM      2  CA  ALA A   1      12.560  13.207   9.208  1.00 20.00           C
+HETATM  100  O   HOH B   1      20.000  20.000  20.000  1.00 30.00           O
+END

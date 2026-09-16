@@ -1,8 +1,8 @@
 # Molecular State Analyzer
 
 Free, browser-only, protein-agnostic workspace for molecular analysis projects.
-Phase 1 provides local project persistence via IndexedDB and an empty dashboard
-shell — no fake analysis, mock molecular data, or server calls for the core flow.
+All project and import data stays on the user’s device (IndexedDB). There is no
+backend.
 
 ## Requirements
 
@@ -35,14 +35,26 @@ Preview the production build:
 npm run preview
 ```
 
-## What Phase 1 includes
+## What Phase 2 includes
 
 - **Project picker** — create and open projects stored in IndexedDB
-- **Persistence** — projects survive page refresh in the same browser
-- **Empty dashboard shell** — shown only when a project is open
-- **Save** — updates `updatedAt` for the open project
+- **Data import** — FASTA, PDB, mmCIF, CSV/TSV, JSON
+- **Column mapping** — CSV/JSON require an explicit time-series column mapping
+  before data is committed to the project
+- **No silent mutation** — original file text is stored unchanged; parse notes
+  and warnings are shown; commit is always an explicit user action
+- **Empty analysis shell** — dashboard does not invent charts or scores
+- **System fonts only** — no Google Fonts / CDN font dependency
 
-All project data stays on the user’s device. There is no backend in Phase 1.
+## Import formats
+
+| Format | Notes |
+|--------|--------|
+| FASTA (`.fasta`, `.fa`, …) | Counts sequences/residues from headers + sequence lines |
+| PDB (`.pdb`, `.ent`) | Counts ATOM/HETATM, models, chains |
+| mmCIF (`.cif`, `.mmcif`) | Discovers data blocks, categories, `_atom_site` rows |
+| CSV / TSV | Delimiter auto-detected; **column mapping required** |
+| JSON | Array of objects or `{ columns, rows }` / `{ data }`; **mapping required** |
 
 ## Stack
 

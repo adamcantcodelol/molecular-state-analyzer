@@ -1,0 +1,6 @@
+time,rmsd,series
+0.0,1.2,runA
+1.0,1.1,runA
+2.0,0.9,runA
+0.0,1.5,runB
+1.0,1.4,runB

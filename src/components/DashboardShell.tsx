@@ -1,10 +1,17 @@
+import type { ImportedDataset } from '../types/dataset'
 import type { Project } from '../types/project'
+import { DatasetList } from './DatasetList'
+import { ImportPanel } from './ImportPanel'
 
 type Props = {
   project: Project
   onBack: () => void
   onSave: () => Promise<void>
+  onAddDataset: (dataset: ImportedDataset) => Promise<void>
+  onRemoveDataset: (id: string) => Promise<void>
   saving?: boolean
+  importing?: boolean
+  removingId?: string | null
   saveMessage?: string | null
 }
 
@@ -12,9 +19,15 @@ export function DashboardShell({
   project,
   onBack,
   onSave,
+  onAddDataset,
+  onRemoveDataset,
   saving = false,
+  importing = false,
+  removingId = null,
   saveMessage = null,
 }: Props) {
+  const datasets = project.datasets ?? []
+
   return (
     <div className="dashboard">
       <header className="dash-header">
@@ -33,7 +46,7 @@ export function DashboardShell({
             type="button"
             className="btn btn-primary"
             onClick={() => void onSave()}
-            disabled={saving}
+            disabled={saving || importing}
           >
             {saving ? 'Saving…' : 'Save project'}
           </button>
@@ -41,14 +54,31 @@ export function DashboardShell({
       </header>
 
       <main className="dash-main">
+        <ImportPanel onCommit={onAddDataset} busy={importing || saving} />
+
+        <section className="panel" aria-labelledby="datasets-heading">
+          <div className="panel-head">
+            <h2 id="datasets-heading" className="panel-title">
+              Imported datasets
+            </h2>
+            <span className="muted small">
+              {datasets.length} in this project
+            </span>
+          </div>
+          <DatasetList
+            datasets={datasets}
+            onRemove={(id) => void onRemoveDataset(id)}
+            removingId={removingId}
+          />
+        </section>
+
         <section className="panel dash-empty" aria-labelledby="shell-heading">
           <h2 id="shell-heading" className="panel-title">
             Dashboard
           </h2>
           <p className="muted">
-            This is an empty shell. Analysis views, structure viewers, and
-            charts will land in later phases — nothing here pretends to analyze
-            data yet.
+            Analysis views stay empty until later phases. Import is the Phase 2
+            feature — no charts or scores are invented here.
           </p>
           <dl className="meta-grid">
             <div>
