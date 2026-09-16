@@ -12,6 +12,7 @@ import { HypothesesPanel } from './HypothesesPanel'
 import { SmFretPanel } from './SmFretPanel'
 import { MultimodalPanel } from './MultimodalPanel'
 import { StatsDashboardPanel } from './StatsDashboardPanel'
+import { ExperimentPlannerPanel } from './ExperimentPlannerPanel'
 import { RawDataExplorer } from './RawDataExplorer'
 
 type Props = {
@@ -90,6 +91,13 @@ export function DashboardShell({
 
         <StatsDashboardPanel project={project} />
 
+        <ExperimentPlannerPanel
+          project={project}
+          datasets={datasets}
+          onPersist={onPersistProject}
+          persisting={saving || importing}
+        />
+
         <MolecularViewerPanel datasets={datasets} />
 
         <HmmPanel
@@ -151,7 +159,7 @@ export function DashboardShell({
             Project details
           </h2>
           <p className="muted">
-            Phases 4–12: Gaussian HMM (Baum–Welch + Viterbi) in a Web Worker,
+            Phases 4–13: Gaussian HMM (Baum–Welch + Viterbi) in a Web Worker,
             K=2 vs K=3 AIC/BIC comparison, moving-block bootstrap uncertainty,
             a seeded SYNTHETIC HMM generator, a display-only Mol* 3D viewer
             for PDB/mmCIF, experimental condition metadata and{' '}
@@ -160,18 +168,22 @@ export function DashboardShell({
             on E_FRET only — statistical latent states, never structural),
             <strong>multimodal links</strong> (structure + time-series /
             conditions bundles with side-by-side or tabbed comparison —
-            linking ≠ joint inference; modalities stay distinct), and a
+            linking ≠ joint inference; modalities stay distinct), a
             read-only <strong>statistics dashboard</strong> that summarizes
             persisted HMM / AIC-BIC / bootstrap / smFRET runs with provenance
-            (no biophysical overclaiming).
+            (no biophysical overclaiming), and an{' '}
+            <strong>experimental design planner</strong> that drafts
+            conditions × replicates × measurements as suggestions only
+            (not prescriptions; does not guarantee power or significance).
             Latent states are unsupervised statistical indices — not
             biophysical names. Synthetic datasets are always labeled SYNTHETIC
             and never presented as experimental. Imported{' '}
             <code>originalText</code> is never mutated;
             runs/comparisons/bootstraps/conditions/hypotheses/smFRET HMM /
-            multimodalLinks live under <code>project.state</code>. The 3D viewer
-            reads originals for display only; the stats dashboard is
-            read-only.
+            multimodalLinks/experimentPlans live under{' '}
+            <code>project.state</code>. The 3D viewer reads originals for
+            display only; the stats dashboard is read-only; planner drafts
+            are labeled Suggestion / draft.
           </p>
           <dl className="meta-grid">
             <div>

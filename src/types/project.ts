@@ -13,9 +13,10 @@ export interface Project {
   datasets: ImportedDataset[]
   /**
    * Optional analysis blob (e.g. hmmRuns, smfretHmmRuns, conditions,
-   * hypotheses, multimodalLinks). Never a substitute for dataset originals.
-   * HMM outputs, smFRET HMM runs, condition metadata, user hypotheses, and
-   * multimodal link bundles are stored here separately from imported
+   * hypotheses, multimodalLinks, experimentPlans). Never a substitute for
+   * dataset originals. HMM outputs, smFRET HMM runs, condition metadata,
+   * user hypotheses, multimodal link bundles, and experimental design
+   * drafts (suggestions only) are stored here separately from imported
    * originalText.
    */
   state?: Record<string, unknown>

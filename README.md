@@ -35,6 +35,19 @@ Preview the production build:
 npm run preview
 ```
 
+## What Phase 13 includes
+
+- **Experimental design planner** — UI to describe a goal, pick # conditions /
+  replicates / measurement types, and generate a structured draft matrix
+  (conditions × replicates × measurements).
+- **Suggestions only** — every plan is `kind: "suggestion_draft"` and labeled
+  **Suggestion / draft — not a prescription; does not guarantee statistical
+  power or significance**. Sample-size notes are rough heuristics only.
+- **Persistence** — `project.state.experimentPlans`; edit/save/remove; optional
+  links to existing conditions / user hypotheses (never promotes hypotheses
+  to evidence). `originalText` never mutated.
+- **Fixture docs** — `fixtures/README-planner.md`.
+
 ## What Phase 12 includes
 
 - **Statistics dashboard** — read-only summary of persisted runs:
