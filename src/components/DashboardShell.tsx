@@ -7,6 +7,8 @@ import { ModelComparePanel } from './ModelComparePanel'
 import { ImportPanel } from './ImportPanel'
 import { SyntheticGeneratorPanel } from './SyntheticGeneratorPanel'
 import { MolecularViewerPanel } from './MolecularViewerPanel'
+import { ConditionsPanel } from './ConditionsPanel'
+import { HypothesesPanel } from './HypothesesPanel'
 import { RawDataExplorer } from './RawDataExplorer'
 
 type Props = {
@@ -106,6 +108,20 @@ export function DashboardShell({
           persisting={saving || importing}
         />
 
+        <ConditionsPanel
+          project={project}
+          datasets={datasets}
+          onPersist={onPersistProject}
+          persisting={saving || importing}
+        />
+
+        <HypothesesPanel
+          project={project}
+          datasets={datasets}
+          onPersist={onPersistProject}
+          persisting={saving || importing}
+        />
+
         <SyntheticGeneratorPanel
           onAddDataset={onAddDataset}
           busy={importing || saving}
@@ -116,14 +132,16 @@ export function DashboardShell({
             Project details
           </h2>
           <p className="muted">
-            Phases 4–8: Gaussian HMM (Baum–Welch + Viterbi) in a Web Worker,
+            Phases 4–9: Gaussian HMM (Baum–Welch + Viterbi) in a Web Worker,
             K=2 vs K=3 AIC/BIC comparison, moving-block bootstrap uncertainty,
-            a seeded SYNTHETIC HMM generator, and a display-only Mol*
-            3D viewer for PDB/mmCIF. Latent states are unsupervised
-            statistical indices — not biophysical names. Synthetic datasets
-            are always labeled SYNTHETIC and never presented as experimental.
-            Imported <code>originalText</code> is never mutated;
-            runs/comparisons/bootstraps live under{' '}
+            a seeded SYNTHETIC HMM generator, a display-only Mol* 3D viewer
+            for PDB/mmCIF, plus experimental condition metadata and{' '}
+            <strong>user hypotheses</strong> (never evidence / never auto-proven).
+            Latent states are unsupervised statistical indices — not
+            biophysical names. Synthetic datasets are always labeled SYNTHETIC
+            and never presented as experimental. Imported{' '}
+            <code>originalText</code> is never mutated;
+            runs/comparisons/bootstraps/conditions/hypotheses live under{' '}
             <code>project.state</code>. The 3D viewer reads originals for
             display only.
           </p>

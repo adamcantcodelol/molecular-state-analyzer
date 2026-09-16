@@ -782,3 +782,77 @@ select.input {
   color: var(--warn);
   font-size: 0.9rem;
 }
+
+/* —— Phase 9: conditions + user hypotheses —— */
+
+.pill-hypothesis {
+  background: color-mix(in srgb, var(--warn) 22%, transparent);
+  color: var(--warn);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  margin-left: 0.35rem;
+  vertical-align: middle;
+}
+
+.hypothesis-disclaimer {
+  margin-top: 0.25rem;
+}
+
+.conditions-panel .kv-block,
+.hypotheses-panel .link-block {
+  margin-top: 0.75rem;
+}
+
+.kv-list,
+.condition-list,
+.hypothesis-list,
+.check-list {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.kv-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+@media (max-width: 640px) {
+  .kv-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.condition-card,
+.hypothesis-card {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+  background: color-mix(in srgb, var(--bg) 65%, var(--bg-elevated));
+}
+
+.condition-card-head,
+.hypothesis-card-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.check-list .choice {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.92rem;
+}
+
+.conditions-panel textarea.input,
+.hypotheses-panel textarea.input {
+  resize: vertical;
+  min-height: 2.5rem;
+}

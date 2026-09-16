@@ -35,6 +35,18 @@ Preview the production build:
 npm run preview
 ```
 
+## What Phase 9 includes
+
+- **Experimental conditions** — attach temperature, ligand, concentration,
+  buffer, notes, plus free-form key–value metadata to the project and/or a
+  dataset; stored under `project.state.conditions`.
+- **User hypotheses** — ligand/condition ↔ state ideas clearly labeled
+  **User hypothesis** (not evidence / not proven); `kind: "user_hypothesis"`;
+  never auto-promoted. Stored under `project.state.hypotheses`.
+- **Honesty** — UI disclaimer on every hypothesis panel/card; `originalText`
+  never mutated.
+- **Fixture docs** — `fixtures/README-conditions.md`.
+
 ## What Phase 8 includes
 
 - **3D structure viewer (Mol\*)** — display-only PDB/mmCIF panel; loads a copy

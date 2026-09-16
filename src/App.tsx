@@ -185,12 +185,12 @@ export default function App() {
       const updated = withDatasets(await saveProject(next))
       setOpenProject(updated)
       setSaveMessage(
-        `Saved HMM run · ${new Date(updated.updatedAt).toLocaleTimeString()}`,
+        `Saved project state · ${new Date(updated.updatedAt).toLocaleTimeString()}`,
       )
       await refreshList()
     } catch (err) {
       setSaveMessage(
-        err instanceof Error ? err.message : 'Failed to persist HMM run.',
+        err instanceof Error ? err.message : 'Failed to persist project state.',
       )
       throw err
     } finally {
