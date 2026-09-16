@@ -1,3 +1,4 @@
+import { stripSensitiveKeys } from '../security/sanitize'
 /**
  * Research report export — Markdown and JSON.
  * Sections stay distinct: Observations / Inferences / User hypotheses.
@@ -343,7 +344,7 @@ export function researchReportToMarkdown(report: ResearchReport): string {
 
 /** Serialize report to pretty-printed JSON. */
 export function researchReportToJson(report: ResearchReport): string {
-  return `${JSON.stringify(report, null, 2)}\n`
+  return `${JSON.stringify(stripSensitiveKeys(report), null, 2)}\n`
 }
 
 export { REPORT_DISCLAIMER }
