@@ -10,6 +10,7 @@ import { MolecularViewerPanel } from './MolecularViewerPanel'
 import { ConditionsPanel } from './ConditionsPanel'
 import { HypothesesPanel } from './HypothesesPanel'
 import { SmFretPanel } from './SmFretPanel'
+import { MultimodalPanel } from './MultimodalPanel'
 import { RawDataExplorer } from './RawDataExplorer'
 
 type Props = {
@@ -130,6 +131,13 @@ export function DashboardShell({
           persisting={saving || importing}
         />
 
+        <MultimodalPanel
+          project={project}
+          datasets={datasets}
+          onPersist={onPersistProject}
+          persisting={saving || importing}
+        />
+
         <SyntheticGeneratorPanel
           onAddDataset={onAddDataset}
           busy={importing || saving}
@@ -140,20 +148,23 @@ export function DashboardShell({
             Project details
           </h2>
           <p className="muted">
-            Phases 4–10: Gaussian HMM (Baum–Welch + Viterbi) in a Web Worker,
+            Phases 4–11: Gaussian HMM (Baum–Welch + Viterbi) in a Web Worker,
             K=2 vs K=3 AIC/BIC comparison, moving-block bootstrap uncertainty,
             a seeded SYNTHETIC HMM generator, a display-only Mol* 3D viewer
             for PDB/mmCIF, experimental condition metadata and{' '}
             <strong>user hypotheses</strong> (never evidence / never auto-proven),
             plus an <strong>smFRET</strong> panel (E_FRET vs time; optional HMM
-            on E_FRET only — statistical latent states, never structural).
+            on E_FRET only — statistical latent states, never structural),
+            and <strong>multimodal links</strong> (structure + time-series /
+            conditions bundles with side-by-side or tabbed comparison —
+            linking ≠ joint inference; modalities stay distinct).
             Latent states are unsupervised statistical indices — not
             biophysical names. Synthetic datasets are always labeled SYNTHETIC
             and never presented as experimental. Imported{' '}
             <code>originalText</code> is never mutated;
-            runs/comparisons/bootstraps/conditions/hypotheses/smFRET HMM live
-            under <code>project.state</code>. The 3D viewer reads originals for
-            display only.
+            runs/comparisons/bootstraps/conditions/hypotheses/smFRET HMM /
+            multimodalLinks live under <code>project.state</code>. The 3D viewer
+            reads originals for display only.
           </p>
           <dl className="meta-grid">
             <div>

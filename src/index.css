@@ -867,3 +867,114 @@ select.input {
 .smfret-panel .warn-box {
   margin: 0.5rem 0 0.75rem;
 }
+
+/* —— Phase 11: multimodal links —— */
+
+.multimodal-panel .warn-box {
+  margin: 0.5rem 0 0.75rem;
+}
+
+.multimodal-panel .link-block {
+  margin-top: 0.75rem;
+}
+
+.multimodal-panel textarea.input {
+  resize: vertical;
+  min-height: 2.5rem;
+}
+
+.mm-link-list {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.mm-link-card {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+  background: color-mix(in srgb, var(--bg) 65%, var(--bg-elevated));
+}
+
+.mm-link-card-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.mm-compare-section {
+  margin-top: 1.25rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--line);
+}
+
+.mm-compare-side {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.mm-pane {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+  background: color-mix(in srgb, var(--bg) 55%, var(--bg-elevated));
+}
+
+.mm-pane-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.65rem;
+  align-items: baseline;
+  margin-bottom: 0.65rem;
+}
+
+.mm-tablist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.5rem 0 0.75rem;
+}
+
+.mm-tab.is-active {
+  outline: 2px solid color-mix(in srgb, var(--accent, #6ea8fe) 55%, transparent);
+}
+
+.mm-tab-title {
+  font-size: 0.85rem;
+}
+
+.pill-modality {
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.pill-modality-structure {
+  background: color-mix(in srgb, #7c9cff 28%, transparent);
+  color: #b8c7ff;
+}
+
+.pill-modality-sequence {
+  background: color-mix(in srgb, #6bcb8b 28%, transparent);
+  color: #a8e6bc;
+}
+
+.pill-modality-timeseries {
+  background: color-mix(in srgb, #f0a050 28%, transparent);
+  color: #ffd0a0;
+}
+
+.pill-modality-tabular {
+  background: color-mix(in srgb, #9aa0a6 28%, transparent);
+  color: #c8ccd0;
+}
+
+.pill-modality-conditions {
+  background: color-mix(in srgb, #c084fc 28%, transparent);
+  color: #e0c4ff;
+}

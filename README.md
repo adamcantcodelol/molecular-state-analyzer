@@ -35,6 +35,16 @@ Preview the production build:
 npm run preview
 ```
 
+## What Phase 11 includes
+
+- **Multimodal links** — bundle datasets (structure + time-series/smFRET, …)
+  and optionally conditions / user hypotheses for comparison.
+- **Side-by-side or tabbed comparison** — each pane keeps a distinct modality
+  label; linking ≠ joint inference; no forced single-narrative merge.
+- **Persistence** — `project.state.multimodalLinks` only; `originalText` never
+  mutated. User hypotheses stay labeled as user hypotheses.
+- **Fixture docs** — `fixtures/README-multimodal.md`.
+
 ## What Phase 10 includes
 
 - **smFRET panel** — committed CSV/JSON with Time+Value mapping; Value treated
