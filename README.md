@@ -35,6 +35,13 @@ Preview the production build:
 npm run preview
 ```
 
+## What Phase 8 includes
+
+- **3D structure viewer (Mol\*)** — display-only PDB/mmCIF panel; loads a copy
+  of `originalText` into Mol*; Full / Reduced (CPU-safe) / Summary modes.
+- **WebGL fallback** — if WebGL or Mol* init fails, honest summary UI (no fake 3D).
+- **Fixture docs** — `fixtures/README-viewer.md` with `sample.pdb` / `sample.cif`.
+
 ## What Phase 7 includes
 
 - **Seeded synthetic HMM generator** — Mulberry32 + Box–Muller Gaussian HMM
@@ -105,4 +112,5 @@ npm run verify:hmm
 - Vite + React + TypeScript
 - [idb](https://github.com/jakearchibald/idb) for IndexedDB
 - [uPlot](https://github.com/leeoniya/uPlot) for raw time-series / distribution charts
+- [Mol*](https://molstar.org/) for display-only PDB/mmCIF 3D viewing
 - Custom Gaussian HMM (Baum–Welch + Viterbi) + moving-block bootstrap in a Vite Web Worker

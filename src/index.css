@@ -708,3 +708,77 @@ select.input {
 .synth-panel .hmm-actions {
   margin-top: 0.75rem;
 }
+
+/* —— Phase 8: Mol* structure viewer —— */
+
+.viewer-panel .viewer-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+  align-items: flex-end;
+  margin: 0.75rem 0;
+}
+
+.viewer-mode {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.4rem 0.75rem 0.55rem;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem 1rem;
+  align-items: center;
+}
+
+.viewer-mode .choice {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.9rem;
+}
+
+.molstar-host {
+  position: relative;
+  width: 100%;
+  height: 420px;
+  margin-top: 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: #111;
+}
+
+.molstar-host-reduced {
+  height: 320px;
+}
+
+.molstar-host .msp-plugin {
+  position: absolute !important;
+  inset: 0;
+}
+
+.viewer-fallback {
+  margin-top: 0.75rem;
+  padding: 0.75rem 1rem;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+  background: var(--accent-soft);
+}
+
+.viewer-details {
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.viewer-summary-grid {
+  margin-top: 0.5rem;
+}
+
+.warn-banner {
+  margin: 0 0 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  background: var(--warn-bg);
+  color: var(--warn);
+  font-size: 0.9rem;
+}

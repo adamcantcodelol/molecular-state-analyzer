@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "idb": "^8.0.3",
+    "molstar": "^5.11.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "uplot": "^1.6.32"
@@ -25,6 +26,7 @@
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",
     "oxlint": "^1.81.0",
+    "sass": "^1.104.1",
     "typescript": "~6.0.2",
     "vite": "^8.3.0"
   }
