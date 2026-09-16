@@ -1,26 +1,22 @@
 import { readFileSync } from 'node:fs'
-import { resolve, dirname } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { resolve } from 'node:path'
 import { compareTwoVsThree, freeParameterCount } from '../src/hmm/modelCriteria.ts'
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
-const csv = readFileSync(resolve(__dirname, '../fixtures/hmm_two_state.csv'), 'utf8')
-const lines = csv.trim().split(/\r?\n/).slice(1)
-const values: number[] = []
-for (const line of lines) {
-  const parts = line.split(',')
-  const v = Number(parts[1])
-  if (Number.isFinite(v)) values.push(v)
-}
+const csvPath = resolve('fixtures/hmm_two_state.csv')
+const text = readFileSync(csvPath, 'utf8')
+const lines = text.trim().split(/\n/).slice(1)
+const values = lines
+  .map((l) => Number(l.split(',')[1]))
+  .filter((v) => Number.isFinite(v))
 
 const cmp = compareTwoVsThree(values, { maxIter: 100, tol: 1e-6, seed: 42 })
 const cmp2 = compareTwoVsThree(values, { maxIter: 100, tol: 1e-6, seed: 42 })
 
 const same =
-  cmp.models[0].aic === cmp2.models[0].aic &&
-  cmp.models[1].aic === cmp2.models[1].aic &&
-  cmp.models[0].bic === cmp2.models[0].bic &&
-  cmp.models[1].bic === cmp2.models[1].bic &&
+  cmp.models[0]!.aic === cmp2.models[0]!.aic &&
+  cmp.models[1]!.aic === cmp2.models[1]!.aic &&
+  cmp.models[0]!.bic === cmp2.models[0]!.bic &&
+  cmp.models[1]!.bic === cmp2.models[1]!.bic &&
   cmp.preferAic === cmp2.preferAic &&
   cmp.preferBic === cmp2.preferBic
 
