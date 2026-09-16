@@ -47,6 +47,14 @@ export type HmmWorkerRequest = {
   settings: HmmSettings
 }
 
+/** Shared seed/settings; always fits nStates 2 and 3. */
+export type HmmCompareRequest = {
+  type: 'compare'
+  requestId: string
+  observations: number[]
+  settings: Omit<HmmSettings, 'nStates'> & { nStates?: number }
+}
+
 export type HmmWorkerProgress = {
   type: 'progress'
   requestId: string
@@ -66,10 +74,83 @@ export type HmmWorkerError = {
   message: string
 }
 
+export type HmmCompareProgress = {
+  type: 'compare-progress'
+  requestId: string
+  nStates: number
+  iteration: number
+  logLikelihood: number
+}
+
+export type HmmCompareResultMsg = {
+  type: 'compare-result'
+  requestId: string
+  /** Serializable comparison (fits included for means/LL). */
+  comparison: {
+    shared: {
+      seed: number
+      maxIter: number
+      tol: number
+      minVariance: number
+      observationCount: number
+    }
+    models: Array<{
+      nStates: number
+      freeParams: number
+      observationCount: number
+      avgLogLikelihood: number
+      totalLogLikelihood: number
+      aic: number
+      bic: number
+      iterations: number
+      converged: boolean
+      means: number[]
+    }>
+    preferAic: 2 | 3
+    preferBic: 2 | 3
+    freeParamFormula: string
+  }
+}
+
 export type HmmWorkerResponse =
   | HmmWorkerProgress
   | HmmWorkerResult
   | HmmWorkerError
+  | HmmCompareProgress
+  | HmmCompareResultMsg
+
+/**
+ * Persisted 2-vs-3 comparison (Phase 5). Never written into dataset.originalText.
+ */
+export type PersistedHmmComparison = {
+  id: string
+  createdAt: string
+  datasetId: string
+  datasetFileName: string
+  valueColumn: string
+  seriesFilter: string | null
+  shared: {
+    seed: number
+    maxIter: number
+    tol: number
+    minVariance: number
+    observationCount: number
+  }
+  models: Array<{
+    nStates: number
+    freeParams: number
+    avgLogLikelihood: number
+    totalLogLikelihood: number
+    aic: number
+    bic: number
+    iterations: number
+    converged: boolean
+    means: number[]
+  }>
+  preferAic: 2 | 3
+  preferBic: 2 | 3
+  freeParamFormula: string
+}
 
 /**
  * Persisted HMM run metadata + outputs.

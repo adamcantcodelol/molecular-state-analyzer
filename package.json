@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "verify:hmm": "npx --yes esbuild scripts/verify-hmm.mts --bundle --platform=node --format=esm --outfile=/tmp/msa-verify-hmm.mjs && node /tmp/msa-verify-hmm.mjs"
+    "verify:hmm": "npx --yes esbuild scripts/verify-hmm.mts --bundle --platform=node --format=esm --outfile=/tmp/msa-verify-hmm.mjs && node /tmp/msa-verify-hmm.mjs",
+    "verify:aic": "npx --yes esbuild scripts/verify-aic.mts --bundle --platform=node --format=esm --outfile=/tmp/msa-verify-aic.mjs && node /tmp/msa-verify-aic.mjs"
   },
   "dependencies": {
     "idb": "^8.0.3",

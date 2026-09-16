@@ -2,6 +2,7 @@ import type { ImportedDataset } from '../types/dataset'
 import type { Project } from '../types/project'
 import { DatasetList } from './DatasetList'
 import { HmmPanel } from './HmmPanel'
+import { ModelComparePanel } from './ModelComparePanel'
 import { ImportPanel } from './ImportPanel'
 import { RawDataExplorer } from './RawDataExplorer'
 
@@ -86,15 +87,23 @@ export function DashboardShell({
           persisting={saving}
         />
 
+        <ModelComparePanel
+          project={project}
+          datasets={datasets}
+          onPersist={onPersistProject}
+          persisting={saving || importing}
+        />
+
         <section className="panel dash-meta" aria-labelledby="shell-heading">
           <h2 id="shell-heading" className="panel-title">
             Project details
           </h2>
           <p className="muted">
-            Phase 4 adds a real Gaussian HMM (Baum–Welch + Viterbi) in a Web
-            Worker. Latent states are unsupervised — not invented biophysical
-            names. Imported <code>originalText</code> is never mutated; HMM
-            outputs live under <code>project.state.hmmRuns</code>.
+            Phases 4–5: Gaussian HMM (Baum–Welch + Viterbi) in a Web Worker,
+            plus K=2 vs K=3 AIC/BIC comparison. Latent states are unsupervised
+            statistical indices — not biophysical names. Imported{' '}
+            <code>originalText</code> is never mutated; runs/comparisons live
+            under <code>project.state</code>.
           </p>
           <dl className="meta-grid">
             <div>
