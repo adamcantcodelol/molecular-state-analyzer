@@ -1,39 +1,88 @@
 # Molecular State Analyzer
 
-Free, browser-only, protein-agnostic workspace for molecular analysis projects.
-All project and import data stays on the user’s device (IndexedDB). There is no
-backend.
+**v1.0.0** — free, browser-only, protein-agnostic workspace for molecular
+analysis projects. All project and import data stays on the user’s device
+(IndexedDB). There is no analysis backend.
 
 ## Requirements
 
-- Node.js 18+ (recommended: current LTS)
+- Node.js 18+ (recommended: 22+ / current LTS)
 - A modern browser with IndexedDB support
 
-## Setup
+## Run locally
 
 ```bash
 npm install
-```
-
-## Development
-
-```bash
 npm run dev
 ```
 
 Open the URL Vite prints (typically `http://localhost:5173`).
 
-## Production build
+Production build and local preview:
 
 ```bash
 npm run build
-```
-
-Preview the production build:
-
-```bash
 npm run preview
 ```
+
+Output lands in **`dist/`** (static assets only).
+
+## Deploy on Cloudflare Pages
+
+| Setting | Value |
+|---------|-------|
+| Build command | `npm run build` |
+| Build output directory | `dist` |
+| Framework preset | None / Vite (optional) |
+| Node.js version | 18+ (22+ recommended) |
+
+Connect the Git repository, set the values above, and deploy. The hosted site
+is a static front-end; **project science data never leaves the user’s browser**
+(IndexedDB on that origin). Clearing site data or using another device starts
+empty — there is no cloud project sync.
+
+Release smoke steps (build, verifies, UI, Pages): see
+[`docs/RELEASE.md`](docs/RELEASE.md).
+
+## Integrity notes
+
+This app is built for honest, local-first scientific workflow tooling. Please
+read labels in the UI; they are intentional:
+
+- **HMM / smFRET latent states** are statistical fit indices on the observation
+  series (or E_FRET), **not** named conformational states or distances.
+- **AIC/BIC “prefer”** markers are information-criteria comparisons only. If a
+  fit did not converge, prefer is **provisional** and not reliable model-selection
+  evidence.
+- **User hypotheses** stay labeled as user hypotheses and are **never**
+  auto-promoted to evidence or proof.
+- **Synthetic** datasets are generated and must remain marked **SYNTHETIC**
+  (never presented as experimental).
+- **Lab notebook / reports** keep Observations, Inferences, and User hypotheses
+  in separate sections; prefer **Archive** over permanent delete.
+- **Optional AI** is non-authoritative. With no free local model configured it
+  stays unavailable and does **not** fabricate completions or overwrite engine
+  outputs / `originalText`.
+- **Multimodal links** compare modalities side-by-side; linking is **not** a
+  joint scientific claim or fused evidence.
+- **Privacy** — no science network APIs; analysis stays on-device. See
+  `fixtures/README-security.md` and the in-app Privacy panel.
+
+Regression / QA table (Phase 18): [`fixtures/README-qa.md`](fixtures/README-qa.md).
+
+```bash
+npm run verify:qa
+```
+
+## What Phase 19 includes (v1.0.0 release)
+
+- **Final release packaging** — `package.json` version **1.0.0**; no new
+  product features.
+- **README polish** — run locally, Cloudflare Pages (`npm run build` → `dist`),
+  integrity notes.
+- **`docs/RELEASE.md`** — smoke checklist (build, verify:qa, browser UI,
+  Pages deploy, integrity reminders).
+- **Git tag** — `v1.0.0` on `main`.
 
 ## What Phase 18 includes
 
@@ -46,7 +95,6 @@ npm run preview
 - **Fixture doc** — `fixtures/README-qa.md` (results table, P2/P3, residual risks).
 
 ## What Phase 15 includes
-
 
 - **Optional AI assistant** — fully optional panel, separate from HMM / stats /
   smFRET engines; labeled non-authoritative.
