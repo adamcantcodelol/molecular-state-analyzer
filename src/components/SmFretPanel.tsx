@@ -7,6 +7,7 @@ import {
 } from '../data/tabular'
 import { extractObservations } from '../hmm/extractObservations'
 import { runHmmInWorker } from '../hmm/runHmmWorker'
+import { guardObservationCount } from '../perf/limits'
 import {
   DEFAULT_HMM_SETTINGS,
   type HmmFitResult,
@@ -161,6 +162,11 @@ export function SmFretPanel({
       const extracted = extractObservations(dataset, activeValue, filter)
       if (extracted.values.length === 0) {
         throw new Error('No finite E_FRET observations after filtering.')
+      }
+      const guard = guardObservationCount(extracted.values.length, 'fit')
+      if (!guard.ok) throw new Error(guard.message)
+      if (guard.level === 'warn' && guard.message) {
+        setProgress(guard.message)
       }
 
       const settings = {

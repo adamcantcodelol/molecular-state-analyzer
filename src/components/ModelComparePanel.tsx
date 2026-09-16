@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { extractObservations } from '../hmm/extractObservations'
 import { getHmmComparisons, withHmmComparison } from '../hmm/persist'
 import { runHmmCompareInWorker } from '../hmm/runHmmWorker'
+import { guardObservationCount } from '../perf/limits'
 import {
   DEFAULT_HMM_SETTINGS,
   type HmmCompareResultMsg,
@@ -106,6 +107,11 @@ export function ModelComparePanel({
       const extracted = extractObservations(dataset, activeValue, filter)
       if (extracted.values.length === 0) {
         throw new Error('No finite observations after filtering.')
+      }
+      const guard = guardObservationCount(extracted.values.length, 'fit')
+      if (!guard.ok) throw new Error(guard.message)
+      if (guard.level === 'warn' && guard.message) {
+        setProgress(guard.message)
       }
 
       const comparison = await runHmmCompareInWorker({

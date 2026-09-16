@@ -15,6 +15,7 @@ import { StatsDashboardPanel } from './StatsDashboardPanel'
 import { ExperimentPlannerPanel } from './ExperimentPlannerPanel'
 import { NotebookPanel } from './NotebookPanel'
 import { OptionalAiPanel } from './OptionalAiPanel'
+import { PerfNotesPanel } from './PerfNotesPanel'
 import { RawDataExplorer } from './RawDataExplorer'
 
 type Props = {
@@ -108,6 +109,8 @@ export function DashboardShell({
         />
 
         <OptionalAiPanel project={project} />
+
+        <PerfNotesPanel />
 
         <MolecularViewerPanel datasets={datasets} />
 

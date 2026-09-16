@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import uPlot from 'uplot'
 import 'uplot/dist/uPlot.min.css'
 import { chartColors } from '../viz/chartTheme'
+import { downsampleForPlot } from '../perf/limits'
 
 export type SeriesPoints = {
   id: string
@@ -41,12 +42,28 @@ export function TimeSeriesChart({
 
     if (series.length === 0) return
 
+    // Display-only stride downsample per series (does not mutate source props).
+    const prepared = series.map((s) => {
+      const zipped = s.xs.map((x, i) => ({ x, y: s.ys[i] ?? null }))
+      const { points, downsampled, stride, originalCount } = downsampleForPlot(zipped)
+      return {
+        id: s.id,
+        label: downsampled
+          ? `${s.label} (plot ↓ every ${stride}, n=${originalCount})`
+          : s.label,
+        xs: points.map((p) => p.x),
+        ys: points.map((p) => p.y),
+        _downsampled: downsampled,
+      }
+    })
+    const seriesForPlot = prepared
+
     const colors = chartColors()
     const width = Math.max(320, el.clientWidth || 640)
 
     // Align all series onto a shared sorted x axis (union of times).
     const xSet = new Set<number>()
-    for (const s of series) {
+    for (const s of seriesForPlot) {
       for (const x of s.xs) xSet.add(x)
     }
     const xs = [...xSet].sort((a, b) => a - b)
@@ -62,8 +79,8 @@ export function TimeSeriesChart({
       },
     ]
 
-    for (let i = 0; i < series.length; i++) {
-      const s = series[i]!
+    for (let i = 0; i < seriesForPlot.length; i++) {
+      const s = seriesForPlot[i]!
       const map = new Map<number, number | null>()
       for (let j = 0; j < s.xs.length; j++) {
         map.set(s.xs[j]!, s.ys[j] ?? null)
@@ -202,7 +219,9 @@ export function TimeSeriesChart({
   return (
     <div className="chart-wrap">
       <div className="chart-hint muted small">
-        Drag horizontally to zoom · double-click to reset · hover for values
+        Drag horizontally to zoom · double-click to reset · hover for values.
+        Large series may be stride-downsampled for display only (labels note ↓);
+        stored data is unchanged.
       </div>
       <div ref={rootRef} className="uplot-host" />
     </div>

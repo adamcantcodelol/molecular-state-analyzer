@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { extractObservations } from '../hmm/extractObservations'
 import { getHmmBootstraps, withHmmBootstrap } from '../hmm/persist'
 import { runHmmBootstrapInWorker } from '../hmm/runHmmWorker'
+import { guardBootstrapWorkload } from '../perf/limits'
 import {
   DEFAULT_BOOTSTRAP_SETTINGS,
   type BootstrapSummary,
@@ -112,6 +113,15 @@ export function BootstrapPanel({
       const extracted = extractObservations(dataset, activeValue, filter)
       if (extracted.values.length === 0) {
         throw new Error('No finite observations after filtering.')
+      }
+
+      const bootGuard = guardBootstrapWorkload(
+        extracted.values.length,
+        Number(nBoot),
+      )
+      if (!bootGuard.ok) throw new Error(bootGuard.message)
+      if (bootGuard.level === 'warn' && bootGuard.message) {
+        setProgress(bootGuard.message)
       }
 
       const blRaw = blockLength.trim()
