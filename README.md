@@ -35,6 +35,17 @@ Preview the production build:
 npm run preview
 ```
 
+## What Phase 12 includes
+
+- **Statistics dashboard** — read-only summary of persisted runs:
+  `hmmRuns`, `hmmComparisons` (AIC/BIC), `hmmBootstraps`, `smfretHmmRuns`.
+- **Provenance** — dataset name, settings (seed, K, …), timestamps, source
+  module, and `project.state` key per row.
+- **Honest metrics** — LL, AIC/BIC prefer, bootstrap mean±SD snippets, E_FRET
+  HMM means shown as statistical fit outputs (not biophysical truth).
+- **Empty state** when no runs; never mutates originals.
+- **Fixture docs** — `fixtures/README-stats.md`.
+
 ## What Phase 11 includes
 
 - **Multimodal links** — bundle datasets (structure + time-series/smFRET, …)

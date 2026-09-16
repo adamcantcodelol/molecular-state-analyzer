@@ -978,3 +978,114 @@ select.input {
   background: color-mix(in srgb, #c084fc 28%, transparent);
   color: #e0c4ff;
 }
+
+/* —— Phase 12: statistics dashboard —— */
+
+.stats-dashboard-panel .warn-box {
+  margin: 0.5rem 0 0.75rem;
+}
+
+.stats-count-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem 1rem;
+  margin: 0.35rem 0 0.65rem;
+  align-items: center;
+}
+
+.stats-count {
+  font-size: 0.92rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.stats-filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.25rem 0 0.5rem;
+}
+
+.stats-run-list {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.stats-run-card {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+  background: color-mix(in srgb, var(--bg) 65%, var(--bg-elevated));
+}
+
+.stats-run-card-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin-bottom: 0.55rem;
+}
+
+.stats-run-title-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem 0.65rem;
+  align-items: baseline;
+}
+
+.stats-dataset-name {
+  font-weight: 600;
+}
+
+.stats-meta-grid {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0;
+}
+
+.stats-meta-grid > div {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.stats-meta-grid dt {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted, #9aa0a6);
+}
+
+.stats-meta-grid dd {
+  margin: 0;
+  font-size: 0.9rem;
+  word-break: break-word;
+}
+
+.stats-meta-grid code {
+  font-size: 0.85rem;
+}
+
+.pill-stats-hmm {
+  background: color-mix(in srgb, #0b6e6e 32%, transparent);
+  color: #8fd4d4;
+}
+
+.pill-stats-aic {
+  background: color-mix(in srgb, #3b5bdb 32%, transparent);
+  color: #a8b8ff;
+}
+
+.pill-stats-boot {
+  background: color-mix(in srgb, #b35c00 32%, transparent);
+  color: #ffc078;
+}
+
+.pill-stats-smfret {
+  background: color-mix(in srgb, #8a3b8a 32%, transparent);
+  color: #e0a8e0;
+}
