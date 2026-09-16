@@ -13,7 +13,8 @@
     "verify:bootstrap": "npx --yes esbuild scripts/verify-bootstrap.mts --bundle --platform=node --format=esm --outfile=/tmp/msa-verify-bootstrap.mjs && node /tmp/msa-verify-bootstrap.mjs",
     "verify:synthetic": "npx --yes esbuild scripts/verify-synthetic.mts --bundle --platform=node --format=esm --outfile=/tmp/msa-verify-synthetic.mjs && node /tmp/msa-verify-synthetic.mjs",
     "verify:notebook": "npx --yes esbuild scripts/verify-notebook.mts --bundle --platform=node --format=esm --outfile=/tmp/msa-verify-notebook.mjs && node /tmp/msa-verify-notebook.mjs",
-    "verify:security": "npx --yes esbuild scripts/verify-security.mts --bundle --platform=node --format=esm --outfile=/tmp/msa-verify-security.mjs && node /tmp/msa-verify-security.mjs"
+    "verify:security": "npx --yes esbuild scripts/verify-security.mts --bundle --platform=node --format=esm --outfile=/tmp/msa-verify-security.mjs && node /tmp/msa-verify-security.mjs",
+    "verify:qa": "npm run verify:hmm && npm run verify:aic && npm run verify:bootstrap && npm run verify:synthetic && npm run verify:notebook && npm run verify:security"
   },
   "dependencies": {
     "idb": "^8.0.3",

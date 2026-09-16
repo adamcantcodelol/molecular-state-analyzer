@@ -201,7 +201,7 @@ export function HypothesesPanel({
             value={draft.title}
             onChange={(e) => setDraft((d) => ({ ...d, title: e.target.value }))}
             disabled={disabled}
-            placeholder="e.g. Ligand-bound = high FRET state?"
+            placeholder="e.g. Hypothesis: ligand-bound ≈ high-FRET latent state? (not proven)"
           />
         </label>
         <label className="field">

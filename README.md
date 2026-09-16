@@ -35,7 +35,18 @@ Preview the production build:
 npm run preview
 ```
 
+## What Phase 18 includes
+
+- **Scientific QA pass** — regression on HMM / AIC / bootstrap / synthetic /
+  notebook / security verifies; integrity copy audit; known-issue list.
+- **Integrity fixes** — AIC/BIC done-status marks provisional prefer when a fit
+  did not converge; multimodal “modality” wording; hypothesis placeholders
+  clearly not proven; dashboard phase blurb includes performance + privacy.
+- **`npm run verify:qa`** — chains all six verify scripts.
+- **Fixture doc** — `fixtures/README-qa.md` (results table, P2/P3, residual risks).
+
 ## What Phase 15 includes
+
 
 - **Optional AI assistant** — fully optional panel, separate from HMM / stats /
   smFRET engines; labeled non-authoritative.

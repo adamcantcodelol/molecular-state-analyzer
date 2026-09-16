@@ -249,7 +249,7 @@ function DatasetPaneBody({ dataset }: { dataset?: ImportedDataset }) {
       <p className="muted small">
         Open the modality-specific panel (3D viewer, Raw explorer, smFRET,
         HMM, …) for detailed analysis. This pane only labels the linked
-        evidence type.
+        modality type (not a joint scientific claim).
       </p>
     </div>
   )

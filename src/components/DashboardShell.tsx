@@ -176,7 +176,7 @@ export function DashboardShell({
             Project details
           </h2>
           <p className="muted">
-            Phases 4–15: Gaussian HMM (Baum–Welch + Viterbi) in a Web Worker,
+            Phases 4–18: Gaussian HMM (Baum–Welch + Viterbi) in a Web Worker,
             K=2 vs K=3 AIC/BIC comparison, moving-block bootstrap uncertainty,
             a seeded SYNTHETIC HMM generator, a display-only Mol* 3D viewer
             for PDB/mmCIF, experimental condition metadata and{' '}
@@ -195,9 +195,12 @@ export function DashboardShell({
             a <strong>lab notebook</strong> with append-only versioned
             notes, project version snapshots, and research report export
             that keeps Observations / Inferences / User hypotheses distinct,
-            and an <strong>optional AI assistant</strong> (free/stub only —
+            an <strong>optional AI assistant</strong> (free/stub only —
             no paid cloud LLM; non-authoritative; never invents results or
-            overwrites analyses). Latent states are unsupervised statistical
+            overwrites analyses), <strong>performance notes</strong> (Worker
+            CPU science; GPU display-only; soft/hard observation limits), and{' '}
+            <strong>privacy &amp; local-first</strong> documentation (IndexedDB;
+            no science network calls). Latent states are unsupervised statistical
             indices — not biophysical names. Synthetic datasets are always
             labeled SYNTHETIC and never presented as experimental. Imported{' '}
             <code>originalText</code> is never mutated;
@@ -207,7 +210,8 @@ export function DashboardShell({
             originals for display only; the stats dashboard is read-only;
             planner drafts are labeled Suggestion / draft; notebook edits
             append versions rather than rewriting history; the AI panel is
-            optional and separate from scientific engines.
+            optional and separate from scientific engines. Phase 18 is a
+            scientific QA / integrity pass (verify suite + copy audit).
           </p>
           <dl className="meta-grid">
             <div>

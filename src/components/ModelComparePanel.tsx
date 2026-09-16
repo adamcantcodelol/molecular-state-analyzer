@@ -130,9 +130,15 @@ export function ModelComparePanel({
       })
 
       setLive(comparison)
-      setProgress(
-        `Done · prefer AIC: K=${comparison.preferAic} · prefer BIC: K=${comparison.preferBic}`,
-      )
+      {
+        const anyNonConv = comparison.models.some((m) => !m.converged)
+        setProgress(
+          `Done · IC prefer AIC: K=${comparison.preferAic} · BIC: K=${comparison.preferBic}` +
+            (anyNonConv
+              ? ' · provisional (non-converged fit — not reliable model-selection evidence)'
+              : ' · information-criteria only (not conformation names)'),
+        )
+      }
 
       const row: PersistedHmmComparison = {
         id: newId(),
