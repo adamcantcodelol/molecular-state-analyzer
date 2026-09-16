@@ -14,6 +14,7 @@ import { MultimodalPanel } from './MultimodalPanel'
 import { StatsDashboardPanel } from './StatsDashboardPanel'
 import { ExperimentPlannerPanel } from './ExperimentPlannerPanel'
 import { NotebookPanel } from './NotebookPanel'
+import { OptionalAiPanel } from './OptionalAiPanel'
 import { RawDataExplorer } from './RawDataExplorer'
 
 type Props = {
@@ -106,6 +107,8 @@ export function DashboardShell({
           persisting={saving || importing}
         />
 
+        <OptionalAiPanel project={project} />
+
         <MolecularViewerPanel datasets={datasets} />
 
         <HmmPanel
@@ -167,7 +170,7 @@ export function DashboardShell({
             Project details
           </h2>
           <p className="muted">
-            Phases 4–14: Gaussian HMM (Baum–Welch + Viterbi) in a Web Worker,
+            Phases 4–15: Gaussian HMM (Baum–Welch + Viterbi) in a Web Worker,
             K=2 vs K=3 AIC/BIC comparison, moving-block bootstrap uncertainty,
             a seeded SYNTHETIC HMM generator, a display-only Mol* 3D viewer
             for PDB/mmCIF, experimental condition metadata and{' '}
@@ -183,19 +186,22 @@ export function DashboardShell({
             <strong>experimental design planner</strong> that drafts
             conditions × replicates × measurements as suggestions only
             (not prescriptions; does not guarantee power or significance),
-            and a <strong>lab notebook</strong> with append-only versioned
+            a <strong>lab notebook</strong> with append-only versioned
             notes, project version snapshots, and research report export
-            that keeps Observations / Inferences / User hypotheses distinct.
-            Latent states are unsupervised statistical indices — not
-            biophysical names. Synthetic datasets are always labeled SYNTHETIC
-            and never presented as experimental. Imported{' '}
+            that keeps Observations / Inferences / User hypotheses distinct,
+            and an <strong>optional AI assistant</strong> (free/stub only —
+            no paid cloud LLM; non-authoritative; never invents results or
+            overwrites analyses). Latent states are unsupervised statistical
+            indices — not biophysical names. Synthetic datasets are always
+            labeled SYNTHETIC and never presented as experimental. Imported{' '}
             <code>originalText</code> is never mutated;
             runs/comparisons/bootstraps/conditions/hypotheses/smFRET HMM /
             multimodalLinks/experimentPlans/notebookEntries/projectVersions
             live under <code>project.state</code>. The 3D viewer reads
             originals for display only; the stats dashboard is read-only;
             planner drafts are labeled Suggestion / draft; notebook edits
-            append versions rather than rewriting history.
+            append versions rather than rewriting history; the AI panel is
+            optional and separate from scientific engines.
           </p>
           <dl className="meta-grid">
             <div>

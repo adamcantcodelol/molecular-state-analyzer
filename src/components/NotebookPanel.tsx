@@ -199,7 +199,7 @@ export function NotebookPanel({
     if (!target) return
     const cur = currentVersion(target)
     const ok = window.confirm(
-      `Permanently remove notebook entry “${cur.title || target.id}” and all versions? Prefer Archive to keep history. originalText untouched.`,
+      `Permanently delete notebook entry “${cur.title || target.id}” and all versions? Prefer Archive instead — it keeps history. This cannot be undone. originalText untouched.`,
     )
     if (!ok) return
     setBusy(true)
@@ -209,7 +209,7 @@ export function NotebookPanel({
       await onPersist(removeNotebookEntry(project, id))
       if (draft.editingId === id) resetDraft()
       if (historyId === id) setHistoryId(null)
-      setStatus('Entry removed from project.state.')
+      setStatus('Entry permanently deleted from project.state (prefer Archive to keep history).')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to remove.')
     } finally {
@@ -489,6 +489,11 @@ export function NotebookPanel({
           <span className="small">Show archived</span>
         </label>
       </div>
+      <p className="muted small notebook-prefer-archive">
+        Prefer <strong>Archive</strong> over permanent delete — archived
+        entries keep full version history. Use Delete permanently only when
+        you intentionally discard an entry.
+      </p>
 
       {visibleEntries.length === 0 ? (
         <div className="empty-state">
@@ -559,11 +564,12 @@ export function NotebookPanel({
                   )}
                   <button
                     type="button"
-                    className="btn btn-ghost btn-sm"
+                    className="btn btn-ghost btn-sm notebook-btn-delete"
                     disabled={disabled}
+                    title="Prefer Archive to keep history. Permanent delete discards all versions."
                     onClick={() => void handleRemove(entry.id)}
                   >
-                    Remove
+                    Delete permanently
                   </button>
                 </div>
               </li>

@@ -1361,3 +1361,99 @@ select.input {
   color: var(--danger);
   margin-top: 0.5rem;
 }
+
+/* —— Phase 15: optional AI assistant (free / stub) —— */
+
+.optional-ai-panel .warn-box {
+  margin: 0.5rem 0 0.75rem;
+}
+
+.ai-disclaimer {
+  margin-top: 0.25rem;
+}
+
+.pill-ai {
+  background: color-mix(in srgb, var(--muted) 16%, var(--bg-elevated));
+  color: var(--muted);
+  border: 1px solid color-mix(in srgb, var(--muted) 40%, var(--line));
+}
+
+.ai-unavailable {
+  margin: 0.75rem 0;
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  border: 1px dashed color-mix(in srgb, var(--muted) 55%, var(--line));
+  background: color-mix(in srgb, var(--muted) 8%, var(--bg-elevated));
+}
+
+.ai-unavailable-title {
+  margin: 0 0 0.35rem;
+  font-weight: 650;
+  font-size: 0.95rem;
+}
+
+.ai-unavailable p {
+  margin: 0.25rem 0;
+}
+
+.ai-helper-block {
+  margin-top: 1rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--bg-elevated);
+}
+
+.ai-template-list {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.ai-template-card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.65rem 0.75rem;
+}
+
+.ai-template-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.35rem;
+  margin-bottom: 0.25rem;
+}
+
+.ai-template-body,
+.ai-excerpt-body {
+  margin: 0.5rem 0 0;
+  padding: 0.65rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--bg) 70%, var(--bg-elevated));
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 0.82rem;
+  max-height: 16rem;
+  overflow: auto;
+}
+
+.ai-excerpt-banner {
+  margin-top: 0.5rem;
+  padding: 0.45rem 0.65rem;
+  border-radius: 8px;
+  border: 1px solid color-mix(in srgb, var(--warn) 45%, var(--line));
+  background: color-mix(in srgb, var(--warn) 8%, var(--bg-elevated));
+  font-size: 0.85rem;
+}
+
+.notebook-prefer-archive {
+  margin: 0.35rem 0 0.5rem;
+}
+
+.notebook-btn-delete {
+  opacity: 0.85;
+}

@@ -35,6 +35,20 @@ Preview the production build:
 npm run preview
 ```
 
+## What Phase 15 includes
+
+- **Optional AI assistant** — fully optional panel, separate from HMM / stats /
+  smFRET engines; labeled non-authoritative.
+- **$0 / free-offline** — no paid cloud LLM bundled; generative status is
+  **Unavailable — no free local model configured** (no fabricated completions).
+- **Safe local helpers only** — copy-only prompt templates for the user to
+  paste into their own tools; format/echo of already-persisted notebook text
+  (whitespace normalize, epistemic labels) without new scientific claims.
+- **Never invents or overwrites** — does not auto-write into analyses or mutate
+  `originalText` / engine outputs under `project.state`.
+- **Notebook UX (P3)** — prefer **Archive** over permanent delete in copy.
+- **Fixture docs** — `fixtures/README-ai.md`.
+
 ## What Phase 14 includes
 
 - **Lab notebook** — append-only entries with immutable version history

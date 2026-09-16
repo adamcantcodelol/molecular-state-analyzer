@@ -73,8 +73,9 @@ npm run build
 
 ## Limitations
 
-- Soft **Archive** hides entries but keeps history; **Remove** deletes the
-  entry from `project.state` (prefer archive for immutability).
+- Soft **Archive** hides entries but keeps history (preferred).
+  **Delete permanently** removes the entry from `project.state` — prefer
+  Archive for immutability; the UI labels and confirms this preference.
 - Project versions are metadata summaries, not full deep clones of every
   HMM payload.
 - Linked hypothesis / condition / dataset ids may become orphaned if those
