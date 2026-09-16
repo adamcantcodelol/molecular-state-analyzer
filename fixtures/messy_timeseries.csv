@@ -1,0 +1,9 @@
+time,rmsd,series,note
+0.0,1.2,runA,ok
+1.0,abc,runA,bad_value
+2.0,0.9,runA,ok
+1.5,1.0,runA,out_of_order
+0.0,1.5,runB,ok
+1.0,,runB,missing
+1.0,1.4,runB,dup_time
+0.0,1.2,runA,dup_row

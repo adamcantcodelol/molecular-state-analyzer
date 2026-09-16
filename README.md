@@ -35,16 +35,22 @@ Preview the production build:
 npm run preview
 ```
 
-## What Phase 2 includes
+## What Phase 3 includes
 
-- **Project picker** — create and open projects stored in IndexedDB
-- **Data import** — FASTA, PDB, mmCIF, CSV/TSV, JSON
-- **Column mapping** — CSV/JSON require an explicit time-series column mapping
-  before data is committed to the project
-- **No silent mutation** — original file text is stored unchanged; parse notes
-  and warnings are shown; commit is always an explicit user action
-- **Empty analysis shell** — dashboard does not invent charts or scores
-- **System fonts only** — no Google Fonts / CDN font dependency
+- **Data quality checker** — inspects committed datasets and surfaces explicit
+  warnings (missing values, duplicates, non-numeric mapped columns, ragged rows,
+  out-of-order time, etc.). Nothing is silently fixed, deleted, or rewritten.
+- **Raw-data visualization** — time-series and distribution plots for mapped
+  CSV/JSON with zoom, hover, and filters (series / time range / value column).
+  Built with [uPlot](https://github.com/leeoniya/uPlot) (client-side only).
+- **Dashboard wiring** — quality + plots live on the open project dashboard for
+  committed datasets; import / column-mapping flow is unchanged.
+
+## Earlier phases
+
+- **Phase 1** — project picker, IndexedDB storage, empty analysis shell
+- **Phase 2** — FASTA / PDB / mmCIF / CSV / JSON import with explicit column
+  mapping for tabular time-series; originals stored unchanged
 
 ## Import formats
 
@@ -60,3 +66,4 @@ npm run preview
 
 - Vite + React + TypeScript
 - [idb](https://github.com/jakearchibald/idb) for IndexedDB
+- [uPlot](https://github.com/leeoniya/uPlot) for raw time-series / distribution charts

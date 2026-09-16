@@ -1,27 +1,25 @@
 import type { ParseResult, TabularSummary } from '../types/dataset'
 
+export type JsonTable = {
+  columnNames: string[]
+  rows: Record<string, string | number | boolean | null>[]
+  notes: string[]
+}
+
 /**
- * JSON import for tabular / time-series shaped data.
- * Accepts:
- * - Array of objects → columns = union of keys
- * - { columns: string[], rows: (string|number|null)[][] }
- * - { data: object[] }
- * Does not coerce or rewrite the original JSON text.
+ * Load all JSON records as a derived tabular view.
+ * Does not rewrite the original JSON text.
  */
-export function parseJson(text: string): ParseResult<TabularSummary> {
-  const warnings: string[] = []
+export function loadJsonRecords(text: string): JsonTable {
+  const notes: string[] = []
   let parsed: unknown
   try {
     parsed = JSON.parse(text)
   } catch (err) {
     return {
-      summary: {
-        kind: 'json',
-        columnNames: [],
-        rowCount: 0,
-        previewRows: [],
-      },
-      warnings: [
+      columnNames: [],
+      rows: [],
+      notes: [
         `JSON parse failed: ${err instanceof Error ? err.message : String(err)}`,
       ],
     }
@@ -31,11 +29,15 @@ export function parseJson(text: string): ParseResult<TabularSummary> {
 
   if (Array.isArray(parsed)) {
     if (parsed.length === 0) {
-      warnings.push('JSON array is empty.')
-    } else if (parsed.every((x) => x !== null && typeof x === 'object' && !Array.isArray(x))) {
+      notes.push('JSON array is empty.')
+    } else if (
+      parsed.every(
+        (x) => x !== null && typeof x === 'object' && !Array.isArray(x),
+      )
+    ) {
       records = parsed as Record<string, unknown>[]
     } else {
-      warnings.push(
+      notes.push(
         'Top-level array is not an array of objects. Wrapped each item as { value } for mapping.',
       )
       records = parsed.map((value, index) => ({ index, value }))
@@ -44,7 +46,7 @@ export function parseJson(text: string): ParseResult<TabularSummary> {
     const obj = parsed as Record<string, unknown>
     if (Array.isArray(obj.data) && obj.data.every(isPlainObject)) {
       records = obj.data as Record<string, unknown>[]
-      warnings.push('Using object.data as the row array.')
+      notes.push('Using object.data as the row array.')
     } else if (
       Array.isArray(obj.rows) &&
       Array.isArray(obj.columns) &&
@@ -58,18 +60,17 @@ export function parseJson(text: string): ParseResult<TabularSummary> {
             out[columns[i]!] = row[i] ?? null
           }
         } else {
-          warnings.push(`Row ${index} is not an array — skipped in summary.`)
+          notes.push(`Row ${index} is not an array — skipped in derived view.`)
         }
         return out
       })
-      warnings.push('Using { columns, rows } table shape.')
+      notes.push('Using { columns, rows } table shape.')
     } else if (isPlainObject(parsed)) {
-      // Single object → one row
       records = [obj]
-      warnings.push('JSON root is a single object — treated as one row.')
+      notes.push('JSON root is a single object — treated as one row.')
     }
   } else {
-    warnings.push('Unsupported JSON root type — expected object or array.')
+    notes.push('Unsupported JSON root type — expected object or array.')
   }
 
   const keySet = new Set<string>()
@@ -78,24 +79,36 @@ export function parseJson(text: string): ParseResult<TabularSummary> {
   }
   const columnNames = [...keySet]
 
-  const previewRows: Record<string, string | number | boolean | null>[] = []
-  for (let i = 0; i < Math.min(8, records.length); i++) {
-    const src = records[i]!
+  const rows: Record<string, string | number | boolean | null>[] = []
+  for (const src of records) {
     const row: Record<string, string | number | boolean | null> = {}
     for (const col of columnNames) {
       row[col] = toPreviewCell(src[col])
     }
-    previewRows.push(row)
+    rows.push(row)
   }
 
+  return { columnNames, rows, notes }
+}
+
+/**
+ * JSON import for tabular / time-series shaped data.
+ * Accepts:
+ * - Array of objects → columns = union of keys
+ * - { columns: string[], rows: (string|number|null)[][] }
+ * - { data: object[] }
+ * Does not coerce or rewrite the original JSON text.
+ */
+export function parseJson(text: string): ParseResult<TabularSummary> {
+  const loaded = loadJsonRecords(text)
   return {
     summary: {
       kind: 'json',
-      columnNames,
-      rowCount: records.length,
-      previewRows,
+      columnNames: loaded.columnNames,
+      rowCount: loaded.rows.length,
+      previewRows: loaded.rows.slice(0, 8),
     },
-    warnings,
+    warnings: loaded.notes,
   }
 }
 

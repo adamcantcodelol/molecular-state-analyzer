@@ -77,7 +77,7 @@ code {
 }
 
 .app-shell {
-  max-width: 960px;
+  max-width: 1100px;
   margin: 0 auto;
   padding: 2rem 1.25rem 3rem;
 }
@@ -458,4 +458,99 @@ select.input {
 .map-list {
   margin: 0.35rem 0 0;
   padding-left: 1.1rem;
+}
+
+/* —— Phase 3: quality + raw explorer —— */
+
+.quality-report {
+  margin: 1rem 0 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--line);
+}
+
+.quality-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.quality-title {
+  margin-top: 0;
+}
+
+.quality-badge {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+}
+
+.quality-badge.is-warn {
+  background: var(--warn-bg);
+  border-color: color-mix(in srgb, var(--warn) 45%, var(--line));
+  color: var(--ink);
+}
+
+.quality-badge.is-ok {
+  background: var(--accent-soft);
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--line));
+  color: var(--accent);
+}
+
+.quality-code {
+  font-family: var(--mono);
+  font-size: 0.8em;
+}
+
+.quality-detail {
+  margin-top: 0.2rem;
+}
+
+.quality-infos {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.quality-warns {
+  margin-top: 0.5rem;
+}
+
+.explore-panel .explore-note {
+  margin-top: 0.75rem;
+}
+
+.explore-controls {
+  display: grid;
+  gap: 0.85rem;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  margin: 1rem 0 0.5rem;
+}
+
+.plot-controls {
+  margin-top: 0.5rem;
+}
+
+.chart-wrap {
+  margin-top: 0.75rem;
+}
+
+.chart-hint {
+  margin-bottom: 0.35rem;
+}
+
+.uplot-host {
+  width: 100%;
+  min-height: 200px;
+}
+
+.uplot-host .uplot {
+  font-family: var(--font);
+}
+
+.dash-meta p {
+  margin-top: 0;
 }

@@ -5,30 +5,36 @@ export type CsvParseOptions = {
   delimiter?: ',' | '\t' | ';'
 }
 
+export type CsvTable = {
+  columnNames: string[]
+  /** Data rows as string cells aligned to columnNames (missing cells → ''). */
+  dataRows: string[][]
+  delimiter: ',' | '\t' | ';'
+  raggedCount: number
+  notes: string[]
+}
+
 /**
- * CSV/TSV parser that preserves cell strings as read (no type coercion).
- * Numbers stay as strings in the original file; preview may show strings only.
+ * Full CSV/TSV table load (derived view). Does not rewrite the source text.
  */
-export function parseCsv(
+export function parseCsvTable(
   text: string,
   options: CsvParseOptions = {},
-): ParseResult<TabularSummary> {
-  const warnings: string[] = []
+): CsvTable {
+  const notes: string[] = []
   if (!text.trim()) {
     return {
-      summary: {
-        kind: 'csv',
-        columnNames: [],
-        rowCount: 0,
-        previewRows: [],
-      },
-      warnings: ['File is empty.'],
+      columnNames: [],
+      dataRows: [],
+      delimiter: options.delimiter ?? ',',
+      raggedCount: 0,
+      notes: ['File is empty.'],
     }
   }
 
   const delimiter = options.delimiter ?? detectDelimiter(text)
   if (!options.delimiter) {
-    warnings.push(
+    notes.push(
       `Delimiter auto-detected as ${delimiter === '\t' ? 'tab' : delimiter === ';' ? 'semicolon' : 'comma'}. Original file unchanged.`,
     )
   }
@@ -36,8 +42,11 @@ export function parseCsv(
   const rows = parseDelimited(text, delimiter)
   if (rows.length === 0) {
     return {
-      summary: { kind: 'csv', columnNames: [], rowCount: 0, previewRows: [] },
-      warnings: [...warnings, 'No rows parsed.'],
+      columnNames: [],
+      dataRows: [],
+      delimiter,
+      raggedCount: 0,
+      notes: [...notes, 'No rows parsed.'],
     }
   }
 
@@ -49,40 +58,61 @@ export function parseCsv(
     return n === 0 ? name : `${name}__${n + 1}`
   })
   if (columnNames.some((c, i) => c !== header[i])) {
-    warnings.push(
-      'Duplicate header names were disambiguated in the summary only (e.g. name__2). Original header row is unchanged.',
+    notes.push(
+      'Duplicate header names were disambiguated in the derived view only (e.g. name__2). Original header row is unchanged.',
     )
   }
 
-  const dataRows = rows.slice(1)
-  let ragged = 0
+  const rawData = rows.slice(1)
+  let raggedCount = 0
+  const dataRows: string[][] = []
+
+  for (const cells of rawData) {
+    if (cells.length !== columnNames.length) raggedCount += 1
+    const aligned: string[] = []
+    for (let c = 0; c < columnNames.length; c++) {
+      aligned.push(cells[c] ?? '')
+    }
+    dataRows.push(aligned)
+  }
+
+  if (raggedCount > 0) {
+    notes.push(
+      `${raggedCount} row(s) have a different field count than the header — padded/truncated in the derived view only.`,
+    )
+  }
+
+  return { columnNames, dataRows, delimiter, raggedCount, notes }
+}
+
+/**
+ * CSV/TSV parser that preserves cell strings as read (no type coercion).
+ * Numbers stay as strings in the original file; preview may show strings only.
+ */
+export function parseCsv(
+  text: string,
+  options: CsvParseOptions = {},
+): ParseResult<TabularSummary> {
+  const table = parseCsvTable(text, options)
   const previewRows: Record<string, string | number | boolean | null>[] = []
 
-  for (let r = 0; r < dataRows.length; r++) {
-    const cells = dataRows[r]!
-    if (cells.length !== columnNames.length) ragged += 1
-    if (previewRows.length < 8) {
-      const obj: Record<string, string | number | boolean | null> = {}
-      for (let c = 0; c < columnNames.length; c++) {
-        obj[columnNames[c]!] = cells[c] ?? ''
-      }
-      previewRows.push(obj)
+  for (let r = 0; r < Math.min(8, table.dataRows.length); r++) {
+    const cells = table.dataRows[r]!
+    const obj: Record<string, string | number | boolean | null> = {}
+    for (let c = 0; c < table.columnNames.length; c++) {
+      obj[table.columnNames[c]!] = cells[c] ?? ''
     }
-  }
-  if (ragged > 0) {
-    warnings.push(
-      `${ragged} row(s) have a different field count than the header — shown padded/truncated in preview only.`,
-    )
+    previewRows.push(obj)
   }
 
   return {
     summary: {
       kind: 'csv',
-      columnNames,
-      rowCount: dataRows.length,
+      columnNames: table.columnNames,
+      rowCount: table.dataRows.length,
       previewRows,
     },
-    warnings,
+    warnings: table.notes,
   }
 }
 

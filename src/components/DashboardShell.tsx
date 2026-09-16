@@ -2,6 +2,7 @@ import type { ImportedDataset } from '../types/dataset'
 import type { Project } from '../types/project'
 import { DatasetList } from './DatasetList'
 import { ImportPanel } from './ImportPanel'
+import { RawDataExplorer } from './RawDataExplorer'
 
 type Props = {
   project: Project
@@ -72,13 +73,15 @@ export function DashboardShell({
           />
         </section>
 
-        <section className="panel dash-empty" aria-labelledby="shell-heading">
+        <RawDataExplorer datasets={datasets} />
+
+        <section className="panel dash-meta" aria-labelledby="shell-heading">
           <h2 id="shell-heading" className="panel-title">
-            Dashboard
+            Project details
           </h2>
           <p className="muted">
-            Analysis views stay empty until later phases. Import is the Phase 2
-            feature — no charts or scores are invented here.
+            Analysis conclusions are not invented here. Phase 3 adds data-quality
+            warnings and raw-value plots only.
           </p>
           <dl className="meta-grid">
             <div>
