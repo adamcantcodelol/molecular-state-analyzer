@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Verify / local scratch (Windows-safe tmp for npm verify:*)
+.tmp

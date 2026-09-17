@@ -8,12 +8,12 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "verify:hmm": "npx --yes esbuild scripts/verify-hmm.mts --bundle --platform=node --format=esm --outfile=/tmp/msa-verify-hmm.mjs && node /tmp/msa-verify-hmm.mjs",
-    "verify:aic": "npx --yes esbuild scripts/verify-aic.mts --bundle --platform=node --format=esm --outfile=/tmp/msa-verify-aic.mjs && node /tmp/msa-verify-aic.mjs",
-    "verify:bootstrap": "npx --yes esbuild scripts/verify-bootstrap.mts --bundle --platform=node --format=esm --outfile=/tmp/msa-verify-bootstrap.mjs && node /tmp/msa-verify-bootstrap.mjs",
-    "verify:synthetic": "npx --yes esbuild scripts/verify-synthetic.mts --bundle --platform=node --format=esm --outfile=/tmp/msa-verify-synthetic.mjs && node /tmp/msa-verify-synthetic.mjs",
-    "verify:notebook": "npx --yes esbuild scripts/verify-notebook.mts --bundle --platform=node --format=esm --outfile=/tmp/msa-verify-notebook.mjs && node /tmp/msa-verify-notebook.mjs",
-    "verify:security": "npx --yes esbuild scripts/verify-security.mts --bundle --platform=node --format=esm --outfile=/tmp/msa-verify-security.mjs && node /tmp/msa-verify-security.mjs",
+    "verify:hmm": "node scripts/run-verify.mjs verify-hmm",
+    "verify:aic": "node scripts/run-verify.mjs verify-aic",
+    "verify:bootstrap": "node scripts/run-verify.mjs verify-bootstrap",
+    "verify:synthetic": "node scripts/run-verify.mjs verify-synthetic",
+    "verify:notebook": "node scripts/run-verify.mjs verify-notebook",
+    "verify:security": "node scripts/run-verify.mjs verify-security",
     "verify:qa": "npm run verify:hmm && npm run verify:aic && npm run verify:bootstrap && npm run verify:synthetic && npm run verify:notebook && npm run verify:security"
   },
   "dependencies": {

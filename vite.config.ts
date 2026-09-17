@@ -5,8 +5,9 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
-    // Mol* is large; pre-bundle for snappier first open of the viewer panel.
-    include: ['molstar'],
+    // Mol* has no package root entry (no main/exports); include the real
+    // subpath the viewer imports so Vite prebundle resolves cleanly.
+    include: ['molstar/lib/apps/viewer/app'],
   },
   build: {
     chunkSizeWarningLimit: 3500,

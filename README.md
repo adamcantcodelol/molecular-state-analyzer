@@ -41,6 +41,27 @@ is a static front-end; **project science data never leaves the user’s browser*
 (IndexedDB on that origin). Clearing site data or using another device starts
 empty — there is no cloud project sync.
 
+## Deploy on Netlify
+
+| Setting | Value |
+|---------|-------|
+| Build command | `npm run build` |
+| Publish directory | `dist` |
+| Node.js version | 18+ (22+ recommended) |
+
+In the Netlify UI: **Add new site → Import an existing project**, connect the
+Git repo, set **Build command** to `npm run build` and **Publish directory**
+to `dist`, then deploy. Same local-first rules as Pages — science data stays
+in the browser IndexedDB on that origin; there is no cloud project sync.
+
+Or use a `netlify.toml` at the repo root:
+
+```toml
+[build]
+  command = "npm run build"
+  publish = "dist"
+```
+
 Release smoke steps (build, verifies, UI, Pages): see
 [`docs/RELEASE.md`](docs/RELEASE.md).
 
@@ -78,7 +99,7 @@ npm run verify:qa
 
 - **Final release packaging** — `package.json` version **1.0.0**; no new
   product features.
-- **README polish** — run locally, Cloudflare Pages (`npm run build` → `dist`),
+- **README polish** — run locally, Cloudflare Pages / Netlify (`npm run build` → `dist`),
   integrity notes.
 - **`docs/RELEASE.md`** — smoke checklist (build, verify:qa, browser UI,
   Pages deploy, integrity reminders).
