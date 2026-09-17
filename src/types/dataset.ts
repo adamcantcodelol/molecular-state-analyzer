@@ -85,6 +85,18 @@ export interface ImportedDataset {
     variances: number[]
     stayProb: number
   }
+  /**
+   * Explicit opt-in derived tabular layout (e.g. paste single numeric row → frame index).
+   * Never applied silently. originalText remains the unmodified paste/file text;
+   * loaders rebuild the derived view from this flag + originalText.
+   */
+  derivedTabular?: {
+    kind: 'single_row_frame_index'
+    /** Derived 1..N time column name (labeled derived in UI). */
+    timeColumn: string
+    /** Column holding the pasted numeric cells as values. */
+    valueColumn: string
+  }
 }
 
 export type ParseResult<T extends DatasetSummary = DatasetSummary> = {

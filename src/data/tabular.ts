@@ -1,6 +1,7 @@
 import type { ColumnMapping, ImportedDataset } from '../types/dataset'
 import { parseCsvTable } from '../import/parseCsv'
 import { loadJsonRecords } from '../import/parseJson'
+import { tryParseSingleNumericRow } from '../import/pasteTabular'
 
 export type CellValue = string | number | boolean | null
 
@@ -17,6 +18,13 @@ export type TabularTable = {
 
 /** Re-parse committed CSV/JSON originalText into a full row table (derived view). */
 export function loadTabularTable(dataset: ImportedDataset): TabularTable | null {
+  if (
+    dataset.format === 'csv' &&
+    dataset.derivedTabular?.kind === 'single_row_frame_index'
+  ) {
+    return loadDerivedFrameIndexTable(dataset)
+  }
+
   if (dataset.format === 'csv') {
     const table = parseCsvTable(dataset.originalText)
     const rows: Record<string, CellValue>[] = table.dataRows.map((cells) => {
@@ -71,4 +79,40 @@ export function isMissing(value: CellValue | undefined): boolean {
   if (value === null || value === undefined) return true
   if (typeof value === 'string' && value.trim() === '') return true
   return false
+}
+
+
+/**
+ * Rebuild the opt-in single-row → frame-index derived view from originalText.
+ * originalText is never modified.
+ */
+function loadDerivedFrameIndexTable(
+  dataset: ImportedDataset,
+): TabularTable | null {
+  const spec = dataset.derivedTabular
+  if (!spec || spec.kind !== 'single_row_frame_index') return null
+
+  const parsed = tryParseSingleNumericRow(dataset.originalText)
+  if (!parsed) {
+    return {
+      columnNames: [spec.timeColumn, spec.valueColumn],
+      rows: [],
+      notes: [
+        'derivedTabular is set to single_row_frame_index, but originalText is no longer a single numeric row. originalText was not modified.',
+      ],
+    }
+  }
+
+  const rows: Record<string, CellValue>[] = parsed.values.map((v, i) => ({
+    [spec.timeColumn]: i + 1,
+    [spec.valueColumn]: v,
+  }))
+
+  return {
+    columnNames: [spec.timeColumn, spec.valueColumn],
+    rows,
+    notes: [
+      `Derived time column “${spec.timeColumn}” is frame index 1..${parsed.values.length} (explicit opt-in at import; labeled derived). originalText is the unmodified paste.`,
+    ],
+  }
 }
